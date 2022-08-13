@@ -1,0 +1,14 @@
+#Node packages
+/node_modules
+
+#Environment secrets
+.env
+
+#Database
+CountingBot.sqlite
+
+#Compiled TypeScript
+/dist
+
+#VSCode Files
+.vscode

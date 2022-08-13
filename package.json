@@ -1,0 +1,22 @@
+{
+	"name": "counting-bot",
+	"version": "1.0.0",
+	"description": "An open source global counting discord bot which is easy to setup and use",
+	"scripts": {
+		"start": "yarn start:database && yarn start:clientStart",
+		"start:clientStart": "ts-node ./src/index",
+		"start:database": "ts-node ./src/database/database"
+	},
+	"author": "MatricalDefunkt",
+	"license": "ISC",
+	"dependencies": {
+		"@discordjs/rest": "^1.0.0",
+		"discord-api-types": "^0.36.1",
+		"discord.js": "^14.2.0",
+		"dotenv": "^16.0.1",
+		"sequelize": "^6.21.3",
+		"sqlite3": "^5.0.8",
+		"tslib": "^2.4.0"
+	},
+	"packageManager": "yarn@1.22.19"
+}
