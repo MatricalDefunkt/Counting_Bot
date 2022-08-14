@@ -73,7 +73,7 @@ export class CountingHandler implements Event {
 											`${message.author} sent \`${number}\` instead of \`${expectedCount}\`! :(
 											The count has been reset to \`0\`. Start again by sending \`1\`.`
 										)
-										.setColor(0xff00000),
+										.setColor(0xff0000),
 								],
 							});
 						}
