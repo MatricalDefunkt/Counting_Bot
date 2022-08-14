@@ -109,7 +109,7 @@ client.on("ready", async (loggedInClient) => {
 		loggedInClient.user.setPresence({
 			activities: [
 				{
-					name: "who's the highest counter?!?!?!",
+					name: "the race to the highest count!",
 					type: ActivityType.Competing,
 				},
 			],
