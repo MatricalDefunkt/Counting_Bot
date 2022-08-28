@@ -53,5 +53,7 @@ for (const directory of directories) {
 console.log("Passed all checks. Starting bot...");
 const mainBotProcess = spawnBot(null, true);
 mainBotProcess.stdout?.on("data", Logger.log);
+mainBotProcess.stdout?.on("error", Logger.debug);
 mainBotProcess.stderr?.on("data", Logger.error);
+mainBotProcess.stderr?.on("error", Logger.error);
 mainBotProcess.on("close", spawnBot);
