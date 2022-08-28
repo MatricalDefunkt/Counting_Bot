@@ -12,3 +12,6 @@ CountingBot.sqlite
 
 #VSCode Files
 .vscode
+
+#Log files
+/src/logs/*.log
