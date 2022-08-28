@@ -51,11 +51,12 @@ export class CountingHandler implements Event {
 							userId: message.author.id,
 						}));
 				}
+
 				if (message.channelId !== serverConfig.countingChannelId) return;
 				const [stringNumber] = message.content.split(" ");
-				if (Number(stringNumber)) {
+				if (Number(stringNumber) || Number(stringNumber) === 0) {
 					const number = Number(stringNumber);
-					if (number !== serverCount.count + 1 || number === 0) {
+					if (number !== serverCount.count + 1) {
 						if (!serverConfig.resetIfWrong)
 							if (serverConfig.deleteIfWrong && message.deletable)
 								await message.delete();
