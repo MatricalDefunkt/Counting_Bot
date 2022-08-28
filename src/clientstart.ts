@@ -117,5 +117,10 @@ client.on("ready", async (loggedInClient) => {
 	});
 })(token);
 
+if (!process.env.ERRORWEBHOOKURL)
+	process.emitWarning(
+		'Webhook URL has not been specified in ".env". Errors will not be logged in Discord.'
+	);
+
 process.on("unhandledRejection", Logger.error);
 process.on("uncaughtException", Logger.error);

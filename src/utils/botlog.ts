@@ -45,12 +45,7 @@ export class Logger {
 			}
 		);
 		if (typeof BotClient !== "undefined" && type === "error") {
-			if (!process.env.ERRORWEBHOOKURL) {
-				process.emitWarning(
-					'Webhook URL has not been specified in ".env". Errors will not be logged in Discord.'
-				);
-				return;
-			}
+			if (!process.env.ERRORWEBHOOKURL) return;
 			const webhook = new WebhookClient({ url: process.env.ERRORWEBHOOKURL });
 			webhook.send(`ERROR:\`\`\`ts\n${String(data).trim()}\`\`\``);
 		}
