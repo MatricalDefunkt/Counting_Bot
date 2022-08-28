@@ -10,13 +10,16 @@
 	"author": "MatricalDefunkt",
 	"license": "ISC",
 	"dependencies": {
-		"@discordjs/rest": "^1.0.0",
-		"discord-api-types": "^0.36.1",
-		"discord.js": "^14.2.0",
+		"@discordjs/rest": "^1.0.1",
+		"discord-api-types": "^0.37.2",
+		"discord.js": "14.2.0",
 		"dotenv": "^16.0.1",
 		"sequelize": "^6.21.3",
-		"sqlite3": "^5.0.8",
+		"sqlite3": "^5.0.11",
 		"tslib": "^2.4.0"
 	},
-	"packageManager": "yarn@1.22.19"
+	"packageManager": "yarn@1.22.19",
+	"engines": {
+		"node": ">= 16.9"
+	}
 }
