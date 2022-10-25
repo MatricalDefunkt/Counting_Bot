@@ -7,10 +7,17 @@ import { ChatInputCommand, ContextMenu } from "../types/interfaces";
 import * as dotenv from "dotenv";
 dotenv.config();
 
+if (!process.env.TOKEN)
+	throw new Error("Token was not provided to register commands.");
+const token = process.env.TOKEN;
+if (!process.env.APPLICATIONID)
+	throw new Error("Application ID was not provided to register commands.");
+const applicationId = process.env.APPLICATIONID;
+
 /**
  *
  * @param {string} applicationId The application ID to register the commands against.
- * @param {Collection<string, BaseCommand>}commands The commands to register (Can be chat input or context menus).
+ * @param {Collection<string, BaseCommand>} commands The commands to register (Can be chat input or context menus).
  * @returns {boolean} Whether or not the commands were registered.
  */
 export const registerCommands = async (
@@ -27,10 +34,8 @@ export const registerCommands = async (
 	for (const contextMenu of contextMenus) {
 		jsonData.push(contextMenu[1].toJSON());
 	}
-	if (!process.env.TOKEN)
-		throw new Error("Token was not provided to register commands.");
 	return rest
-		.setToken(process.env.TOKEN)
+		.setToken(token)
 		.put(Routes.applicationCommands(applicationId), { body: jsonData })
 		.then(() => {
 			console.log("Registered commands successfully!");
@@ -41,3 +46,21 @@ export const registerCommands = async (
 			return false;
 		});
 };
+
+// This code-block will not run if you start the bot directly using [yarn start] or [npm run start]
+// Only to be used for testing commands.
+if (process.argv[1] === process.cwd() + "\\src\\utils\\registerCommands") {
+	import("../commands/exports").then((commands) => {
+		import("../contextmenus/exports").then((contextMenus) => {
+			const commandCollection = new Collection<string, ChatInputCommand<any>>();
+			for (const command of commands.default) {
+				commandCollection.set(command.name, command);
+			}
+			const contextMenuCollection = new Collection<string, ContextMenu>();
+			for (const contextMenu of contextMenus.default) {
+				contextMenuCollection.set(contextMenu.name, contextMenu);
+			}
+			registerCommands(applicationId, commandCollection, contextMenuCollection);
+		});
+	});
+}
