@@ -14,10 +14,10 @@ I would recommend that you [invite this bot](https://discord.com/api/oauth2/auth
 ### Mandatory
 
 <ul>
-<li><a href="https://nodejs.org/en/">NodeJS</a>, version higher than 16.9</li>
-<li>Any text file editor or code editor (notepad works as well)</li>
-<li>A Discord account</li>
-<li>A <a href="https://discord.com/developers/applications">Discord Bot</a> account (Small <a href="https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot">tutorial</a> on how to create one)</li>
+  <li><a href="https://nodejs.org/en/">NodeJS</a>, version higher than 16.9</li>
+  <li>Any text file editor or code editor (notepad works as well)</li>
+  <li>A Discord account</li>
+  <li>A <a href="https://discord.com/developers/applications">Discord Bot</a> account (Small <a href="https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot">tutorial</a> on how to create one)</li>
 </ul>
 
 ### Optional
@@ -51,7 +51,7 @@ Assuming that you have downloaded and installed NodeJS, and extracted the source
   <li>Save the text file in the primary folder (alongside .env.example), naming it <kbd>.env</kbd>.</li>
   <li>Create a folder names <kbd>logs</kbd> (casing matters).</li>
   <li>Open an instance of a shell in the folder.</li>
-  <li>Run the command <kbd>npm install</kbd> in the shell window.</li>
+  <li>Run the command <kbd>npm install --save-dev</kbd> in the shell window.</li>
   <li>Run the command <kbd>npm run start</kbd> in the shell window once the previous command succeeds.</li>
 </ol>
 
