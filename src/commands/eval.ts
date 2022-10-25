@@ -9,7 +9,11 @@ import {
 } from "discord.js";
 import { Logger } from "../utils/botlog";
 import { ChatInputCommand, CommandCancelCodes } from "../types/interfaces";
-import { trueFalseArrays } from "../utils/configTypes";
+
+const trueFalseArrays = {
+	trueArray: ["true", "yes", "y", "t"],
+	falseArray: ["f", "n", "no", "false"],
+};
 
 const evalModal = new ModalBuilder()
 	.setCustomId("evalModal")
@@ -119,6 +123,7 @@ export default class Eval
 	};
 
 	canBeDeferred = false;
+	betaOnly = true;
 
 	constructor() {
 		super();
