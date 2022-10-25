@@ -79,53 +79,29 @@ export default class Count
 		interaction,
 		code
 	) => {
-		if (interaction.isRepliable()) {
-			if (code === CommandCancelCodes.ImproperConfiguration) {
-				return await interaction.reply({
-					content: `Please check the server's configuration using \`/config\`.`,
-					ephemeral: true,
-				});
-			} else if (code === CommandCancelCodes.MissingPermissions) {
-				return await interaction.reply({
-					content: `You are not authorized to run this command.`,
-					ephemeral: true,
-				});
-			}
-		} else {
-			if (code === CommandCancelCodes.ImproperConfiguration) {
-				return await interaction.editReply({
-					content: `Please check the server's configuration using \`/config\`.`,
-				});
-			} else if (code === CommandCancelCodes.MissingPermissions) {
-				return await interaction.editReply({
-					content: `You are not authorized to run this command.`,
-				});
-			}
+		if (code === CommandCancelCodes.ImproperConfiguration) {
+			return await interaction.reply({
+				content: `Please check the server's configuration using \`/config\`.`,
+				ephemeral: true,
+			});
+		} else if (code === CommandCancelCodes.MissingPermissions) {
+			return await interaction.reply({
+				content: `You are not authorized to run this command.`,
+				ephemeral: true,
+			});
 		}
 	};
 
-	isGuildCommand: SubCommandParent<"cached">["isGuildCommand"] = () => {
-		return !this.dm_permission;
-	};
-
-	isDMCommand: SubCommandParent<"cached">["isDMCommand"] = () => {
-		return this.dm_permission;
-	};
-
-	isSubCommandParent: SubCommandParent<"cached">["isSubCommandParent"] = () => {
-		return true;
-	};
-
+	isGuildCommand: SubCommandParent<"cached">["isGuildCommand"] = () =>
+		!this.dm_permission;
+	isDMCommand: SubCommandParent<"cached">["isDMCommand"] = () =>
+		this.dm_permission;
+	isSubCommandParent: SubCommandParent<"cached">["isSubCommandParent"] = () =>
+		true;
 	isAutocompleteCommand: SubCommandParent<"cached">["isAutocompleteCommand"] =
-		() => {
-			return false;
-		};
-
+		() => false;
 	isAutocompleteParent: SubCommandParent<"cached">["isAutocompleteParent"] =
-		() => {
-			return false;
-		};
-
+		() => false;
 	constructor() {
 		super();
 		this.setName(this.name);
