@@ -53,7 +53,7 @@ export class MessageDelete implements Event {
 								.setDescription(
 									`${message.author} (${
 										message.author.tag
-									}) deleted their message which was the last number for the channel.\n ℹ️➡️ The current count is still \`${
+									}) deleted their message which was the last number for the channel.\nThe current count is still \`${
 										serverCount.count
 									}\`, making the next number \`${serverCount.count + 1}\``
 								)
