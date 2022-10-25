@@ -67,9 +67,11 @@ export async function createCountEmbed(
 }
 
 export async function createLeaderboardEmbed({
+	pageNumber,
 	interaction,
 	memberCounts,
 }: {
+	pageNumber: number;
 	interaction: CommandInteraction<"cached">;
 	memberCounts: MemberCounts[];
 }): Promise<EmbedBuilder> {
@@ -86,12 +88,14 @@ export async function createLeaderboardEmbed({
 			Last counted on: <t:${Math.trunc(memberCount.lastCountTime.getTime() / 1000)}>`
 	);
 	for (const [index, value] of leaderboard.entries()) {
-		const member = await interaction.guild.members.fetch(
+		const user = await interaction.client.users.fetch(
 			memberCounts[index].userId
 		);
 		embed.addFields({
-			name: `${index + 1}. ${member.displayName}#${member.user.discriminator}`,
-			value,
+			name: `${pageNumber * 10 + index + 1}. ${user.username}#${
+				user.discriminator
+			}`,
+			value: `${value}\nUser: ${user}`,
 		});
 	}
 	return embed;
