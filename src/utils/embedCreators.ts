@@ -18,7 +18,7 @@ export async function createCountEmbed(
 		const serverCount = ServerCounts.get(guild.id)!;
 		embed.setTitle(`Stats in ${guild.name}`);
 		embed.addFields(
-			{ name: "Current Count:", value: `${serverCount.counts}`, inline: true },
+			{ name: "Current Count:", value: `${serverCount.count}`, inline: true },
 			{
 				name: "Highest Count:",
 				value: `${serverCount.highestCount}`,

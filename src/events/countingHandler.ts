@@ -27,7 +27,7 @@ export class CountingHandler implements Event {
 						(await Counts.findByPk(guildId)) ??
 						(await Counts.create({
 							guildId,
-							counts: 0,
+							count: 0,
 							highestCount: 0,
 							lastMessageId: message.id,
 							lastCounterId: message.author.id,
@@ -46,7 +46,7 @@ export class CountingHandler implements Event {
 						})) ??
 						(await MemberCounts.create({
 							guildId,
-							count: 0,
+							counts: 0,
 							lastCount: 0,
 							userId: message.author.id,
 						}));
@@ -56,15 +56,15 @@ export class CountingHandler implements Event {
 				const [stringNumber] = message.content.split(" ");
 				if (Number(stringNumber) || Number(stringNumber) === 0) {
 					const number = Number(stringNumber);
-					if (number !== serverCount.counts + 1) {
+					if (number !== serverCount.count + 1) {
 						if (!serverConfig.resetIfWrong)
 							if (serverConfig.deleteIfWrong && message.deletable)
 								await message.delete();
 							else await message.react("❌");
 						else {
-							const expectedCount = serverCount.counts + 1;
+							const expectedCount = serverCount.count + 1;
 							await message.react("❌");
-							serverCount.counts = 0;
+							serverCount.count = 0;
 							await serverCount.save();
 							await message.channel.send({
 								embeds: [
@@ -79,9 +79,9 @@ export class CountingHandler implements Event {
 							});
 						}
 					} else {
-						serverCount.counts = number;
-						if (serverCount.highestCount < serverCount.counts)
-							serverCount.highestCount = serverCount.counts;
+						serverCount.count = number;
+						if (serverCount.highestCount < serverCount.count)
+							serverCount.highestCount = serverCount.count;
 						serverCount.lastMessageId = message.id;
 						serverCount.lastCounterId = message.author.id;
 						await serverCount.save();

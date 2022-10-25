@@ -70,7 +70,7 @@ Configs.init(
 
 export class Counts extends Model<{
 	guildId: string;
-	counts: number;
+	count: number;
 	highestCount: number;
 	lastMessageId: string;
 	lastCounterId: string;
@@ -81,11 +81,11 @@ export class Counts extends Model<{
 	public set guildId(newId) {
 		this.setDataValue("guildId", newId);
 	}
-	public get counts() {
-		return this.getDataValue("counts");
+	public get count() {
+		return this.getDataValue("count");
 	}
-	public set counts(newCount) {
-		this.setDataValue("counts", newCount);
+	public set count(newCount) {
+		this.setDataValue("count", newCount);
 		this._onUpdate();
 	}
 	public get highestCount() {
@@ -118,7 +118,7 @@ export class Counts extends Model<{
 Counts.init(
 	{
 		guildId: { type: DataTypes.TEXT(), primaryKey: true },
-		counts: DataTypes.NUMBER(),
+		count: DataTypes.NUMBER(),
 		highestCount: DataTypes.NUMBER(),
 		lastMessageId: DataTypes.STRING(),
 		lastCounterId: DataTypes.STRING(),
@@ -129,7 +129,7 @@ Counts.init(
 export class MemberCounts extends Model<{
 	userId: string;
 	guildId: string;
-	count: number;
+	counts: number;
 	lastCount: number;
 }> {
 	public get userId() {
@@ -147,10 +147,10 @@ export class MemberCounts extends Model<{
 		this._onUpdate();
 	}
 	public get count() {
-		return this.getDataValue("count");
+		return this.getDataValue("counts");
 	}
 	public set count(newCount) {
-		this.setDataValue("count", newCount);
+		this.setDataValue("counts", newCount);
 		this._onUpdate();
 	}
 	public get lastCount() {
@@ -177,7 +177,7 @@ MemberCounts.init(
 	{
 		userId: { type: DataTypes.TEXT(), primaryKey: true },
 		guildId: { type: DataTypes.TEXT(), primaryKey: true },
-		count: { type: DataTypes.NUMBER() },
+		counts: { type: DataTypes.NUMBER() },
 		lastCount: { type: DataTypes.NUMBER() },
 	},
 	{ sequelize }
