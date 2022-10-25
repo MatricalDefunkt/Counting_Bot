@@ -5,7 +5,15 @@ import { Logger } from "./utils/botlog";
 import fs from "fs";
 import path from "path";
 
-const spawnBot = (code: number | null, startup?: boolean) => {
+childProcesses.fork("src/database/database");
+
+const spawnBot = ({
+	code,
+	startup,
+}: {
+	code?: number | null;
+	startup?: boolean;
+}) => {
 	if (!startup) {
 		if (code)
 			Logger.error(`Process had closed with code: ${code}. Restarting now.`);
@@ -13,9 +21,9 @@ const spawnBot = (code: number | null, startup?: boolean) => {
 	}
 	return childProcesses.fork(
 		"src/clientstart",
-		[startup ? process.argv[2] ?? `` : ``],
+		[startup ? process.argv.slice(2).join(" ") : ``],
 		{
-			stdio: "pipe",
+			stdio: "inherit",
 		}
 	);
 };
@@ -45,15 +53,15 @@ for (const directory of directories) {
 		);
 		if (tsFiles.length !== exportedArray.default.length)
 			throw new Error(
-				`All files are not exported in exports.ts of ~${directory}~`
+				`All files are not exported in exports.ts of [${directory}]\nExpected: ${tsFiles.length}\nActual: ${exportedArray.default.length}`
 			);
 	}
 }
 
 console.log("Passed all checks. Starting bot...");
-const mainBotProcess = spawnBot(null, true);
+const mainBotProcess = spawnBot({ startup: true });
 mainBotProcess.stdout?.on("data", Logger.log);
 mainBotProcess.stdout?.on("error", Logger.debug);
 mainBotProcess.stderr?.on("data", Logger.error);
 mainBotProcess.stderr?.on("error", Logger.error);
-mainBotProcess.on("close", spawnBot);
+mainBotProcess.on("close", (code) => spawnBot({ code }));
