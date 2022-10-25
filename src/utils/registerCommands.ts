@@ -28,6 +28,8 @@ export const registerCommands = async (
 	const rest = new REST();
 	console.log("Registering commands...");
 	const jsonData = [];
+	if (token === process.env.TOKEN)
+		commands = commands.filter((command) => !command.betaOnly);
 	for (const command of commands) {
 		jsonData.push(command[1].toJSON());
 	}
