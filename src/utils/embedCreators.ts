@@ -41,8 +41,8 @@ export async function createCountEmbed(
 			{
 				name: "Times Counted:",
 				value: `${
-					userCount?.counts
-						? `Counted \`${userCount.counts}\` time(s)`
+					userCount?.count
+						? `Counted \`${userCount.count}\` time(s)`
 						: `Not counted yet.`
 				}`,
 				inline: true,
@@ -50,10 +50,12 @@ export async function createCountEmbed(
 			{
 				name: "Last Counted:",
 				value: `${
-					userCount?.counts
+					userCount?.count
 						? `Last counted the number \`${
 								userCount.lastCount
-						  }\` at <t:${Math.floor(userCount.lastCountTime.getTime() / 1000)}:f>`
+						  }\` at <t:${Math.floor(
+								userCount.lastCountTime.getTime() / 1000
+						  )}:f>`
 						: `Not counted yet.`
 				}`,
 				inline: true,
