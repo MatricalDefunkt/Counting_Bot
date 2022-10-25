@@ -25,40 +25,24 @@ export default class Leaderboard
 	description = "Gets the counting leaderboard for the server.";
 	execute: ChatInputCommand<"cached">["execute"] = async (interaction) => {
 		let pageIndex = 0;
-		const memberCounts = await MemberCounts.findAll({
+		const result = await MemberCounts.findAndCountAll({
 			where: { guildId: interaction.guildId, counts: { [Op.gt]: 0 } },
 			order: [["counts", "DESC"]],
 			limit: 10,
 			offset: pageIndex * 10,
 		});
-		const memberCountSize = await MemberCounts.count({
-			where: { guildId: interaction.guildId },
-		});
-		const pages = Math.ceil(memberCountSize / 10);
+		const memberCounts = result.rows;
+		const pages = Math.ceil(result.count / 10);
 		if (memberCounts.length === 0) {
 			return interaction.editReply({
 				content: "This server has not begun counting yet!",
 			});
 		}
-		const leaderboard = memberCounts.map(
-			(memberCount) =>
-				`Last number counted: ${memberCount.lastCount}
-				Total numbers counted: ${memberCount.count}
-				Began counting on: <t:${Math.trunc(memberCount.createdAt.getTime() / 1000)}>
-				Last counted on: <t:${Math.trunc(memberCount.lastCountTime.getTime() / 1000)}>`
-		);
-		const embed = new EmbedBuilder()
-			.setTitle("Counting Leaderboard")
-			.setDescription(
-				"Leaderboard is created on the basis of the number of times a user has counted.\nOnly the top 10 users are shown, for now."
-			);
-		for (const [index, memberCount] of memberCounts.entries()) {
-			const user = await interaction.client.users.fetch(memberCount.userId);
-			embed.addFields({
-				name: `${pageIndex + index + 1}. ${user.tag}`,
-				value: leaderboard[index],
-			});
-		}
+		const embed = await createLeaderboardEmbed({
+			interaction,
+			memberCounts,
+			pageNumber: pageIndex + 1,
+		});
 		const pageButtons = createPaginationButtons();
 		embed.setFooter({ text: `Page ${pageIndex + 1} of ${pages}` });
 		const reply = await interaction.editReply({
@@ -73,6 +57,7 @@ export default class Leaderboard
 				message: reply,
 			}
 		);
+		//TODO: Add "goto" button which replies with a modal, and goes to inputted page.
 		collector.on("collect", async (button) => {
 			await button.update({ components: disableButtons(pageButtons) });
 
