@@ -7,7 +7,7 @@ const sequelize = new Sequelize("database", "user", "pass", {
 	dialect: "sqlite",
 	logging: false,
 	typeValidation: true,
-	storage: "CountingBot.sqlite",
+	storage: "./src/database/CountingBot.sqlite",
 });
 
 export class Configs extends Model<{
@@ -20,38 +20,41 @@ export class Configs extends Model<{
 	public get guildId() {
 		return this.getDataValue("guildId");
 	}
+	public set guildId(newId) {
+		this.setDataValue("guildId", newId);
+		this._onUpdate();
+	}
 	public get countingChannelId() {
 		return this.getDataValue("countingChannelId");
 	}
 	public set countingChannelId(newId) {
 		this.setDataValue("countingChannelId", newId);
-		this._onUpdate(this);
+		this._onUpdate();
 	}
 	public get staffRoleId() {
 		return this.getDataValue("staffRoleId");
 	}
 	public set staffRoleId(newId) {
 		this.setDataValue("staffRoleId", newId);
-		this._onUpdate(this);
+		this._onUpdate();
 	}
 	public get deleteIfWrong() {
 		return this.getDataValue("deleteIfWrong");
 	}
 	public set deleteIfWrong(newBoolean) {
 		this.setDataValue("deleteIfWrong", newBoolean);
-		this._onUpdate(this);
+		this._onUpdate();
 	}
 	public get resetIfWrong() {
 		return this.getDataValue("resetIfWrong");
 	}
 	public set resetIfWrong(newBoolean) {
 		this.setDataValue("resetIfWrong", newBoolean);
-		this._onUpdate(this);
+		this._onUpdate();
 	}
-	private async _onUpdate(newState: Configs) {
-		ServerConfigs.delete(newState.guildId);
-		ServerConfigs.set(newState.guildId, newState);
-		await newState.save();
+	private async _onUpdate() {
+		ServerConfigs.set(this.guildId, this);
+		await this.save();
 	}
 }
 
@@ -75,38 +78,40 @@ export class Counts extends Model<{
 	public get guildId() {
 		return this.getDataValue("guildId");
 	}
+	public set guildId(newId) {
+		this.setDataValue("guildId", newId);
+	}
 	public get count() {
 		return this.getDataValue("count");
 	}
 	public set count(newCount) {
 		this.setDataValue("count", newCount);
-		this._onUpdate(this);
+		this._onUpdate();
 	}
 	public get highestCount() {
 		return this.getDataValue("count");
 	}
 	public set highestCount(newHighestCount) {
 		this.setDataValue("highestCount", newHighestCount);
-		this._onUpdate(this);
+		this._onUpdate();
 	}
 	public get lastMessageId() {
 		return this.getDataValue("lastMessageId");
 	}
 	public set lastMessageId(newLastMessageId) {
 		this.setDataValue("lastMessageId", newLastMessageId);
-		this._onUpdate(this);
+		this._onUpdate();
 	}
 	public get lastCounterId() {
 		return this.getDataValue("lastCounterId");
 	}
 	public set lastCounterId(newLastCounterId) {
 		this.setDataValue("lastCounterId", newLastCounterId);
-		this._onUpdate(this);
+		this._onUpdate();
 	}
-	private async _onUpdate(newState: Counts) {
-		ServerCounts.delete(newState.guildId);
-		ServerCounts.set(newState.guildId, newState);
-		await newState.save();
+	private async _onUpdate() {
+		ServerCounts.set(this.guildId, this);
+		await this.save();
 	}
 }
 
@@ -124,30 +129,47 @@ Counts.init(
 export class MemberCounts extends Model<{
 	userId: string;
 	guildId: string;
-	counts: number;
+	count: number;
 	lastCount: number;
 }> {
 	public get userId() {
 		return this.getDataValue("userId");
 	}
+	public set userId(newId) {
+		this.setDataValue("userId", newId);
+		this._onUpdate();
+	}
 	public get guildId() {
 		return this.getDataValue("guildId");
 	}
-	public get counts() {
-		return this.getDataValue("counts");
+	public set guildId(newId) {
+		this.setDataValue("guildId", newId);
+		this._onUpdate();
 	}
-	public set counts(newCount) {
-		this.setDataValue("counts", newCount);
+	public get count() {
+		return this.getDataValue("count");
+	}
+	public set count(newCount) {
+		this.setDataValue("count", newCount);
+		this._onUpdate();
 	}
 	public get lastCount() {
-		return this.getDataValue("counts");
+		return this.getDataValue("lastCount");
 	}
 	public set lastCount(newlastCount) {
 		this.setDataValue("lastCount", newlastCount);
+		this._onUpdate();
 	}
 	public get lastCountTime() {
 		//@ts-ignore
 		return this.getDataValue("updatedAt") as Date;
+	}
+	public get createdAt() {
+		//@ts-ignore
+		return this.getDataValue("updatedAt") as Date;
+	}
+	private _onUpdate() {
+		this.save();
 	}
 }
 
@@ -155,7 +177,7 @@ MemberCounts.init(
 	{
 		userId: { type: DataTypes.TEXT(), primaryKey: true },
 		guildId: { type: DataTypes.TEXT(), primaryKey: true },
-		counts: { type: DataTypes.NUMBER() },
+		count: { type: DataTypes.NUMBER() },
 		lastCount: { type: DataTypes.NUMBER() },
 	},
 	{ sequelize }
