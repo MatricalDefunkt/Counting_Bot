@@ -70,7 +70,7 @@ Configs.init(
 
 export class Counts extends Model<{
 	guildId: string;
-	count: number;
+	counts: number;
 	highestCount: number;
 	lastMessageId: string;
 	lastCounterId: string;
@@ -81,15 +81,15 @@ export class Counts extends Model<{
 	public set guildId(newId) {
 		this.setDataValue("guildId", newId);
 	}
-	public get count() {
-		return this.getDataValue("count");
+	public get counts() {
+		return this.getDataValue("counts");
 	}
-	public set count(newCount) {
-		this.setDataValue("count", newCount);
+	public set counts(newCount) {
+		this.setDataValue("counts", newCount);
 		this._onUpdate();
 	}
 	public get highestCount() {
-		return this.getDataValue("count");
+		return this.getDataValue("highestCount");
 	}
 	public set highestCount(newHighestCount) {
 		this.setDataValue("highestCount", newHighestCount);
@@ -118,7 +118,7 @@ export class Counts extends Model<{
 Counts.init(
 	{
 		guildId: { type: DataTypes.TEXT(), primaryKey: true },
-		count: DataTypes.NUMBER(),
+		counts: DataTypes.NUMBER(),
 		highestCount: DataTypes.NUMBER(),
 		lastMessageId: DataTypes.STRING(),
 		lastCounterId: DataTypes.STRING(),

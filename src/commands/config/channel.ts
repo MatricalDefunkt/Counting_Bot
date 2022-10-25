@@ -85,7 +85,7 @@ export default class ConfigChannel
 						})
 						.setDescription(
 							`This channel has been set as the counting channel for this server.\nStart counting now by typing \`${
-								((await getServerCount(interaction.guildId)).count ?? 0) + 1
+								((await getServerCount(interaction.guildId)).counts ?? 0) + 1
 							}\`!`
 						)
 						.addFields({

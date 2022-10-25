@@ -54,8 +54,8 @@ export class MessageDelete implements Event {
 									`${message.author} (${
 										message.author.tag
 									}) deleted their message which was the last number for the channel.\nThe current count is still \`${
-										serverCount.count
-									}\`, making the next number \`${serverCount.count + 1}\``
+										serverCount.counts
+									}\`, making the next number \`${serverCount.counts + 1}\``
 								)
 								.setColor("Red"),
 						],

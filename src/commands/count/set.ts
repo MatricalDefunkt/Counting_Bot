@@ -52,7 +52,7 @@ export default class CountSet
 
 		const newCount = interaction.options.getInteger("new-count", true);
 
-		if (newCount === serverCount.count) {
+		if (newCount === serverCount.counts) {
 			return await interaction.editReply({
 				content: `The current count of the server already is ${newCount}.`,
 			});
@@ -60,7 +60,7 @@ export default class CountSet
 
 		const buttons = createConfirmationButtons("yeschange", "nocancel");
 		const reply = await interaction.editReply({
-			content: `You are about to change the server's count from \`${serverCount.count}\` to \`${newCount}\`. Do you want to continue?`,
+			content: `You are about to change the server's count from \`${serverCount.counts}\` to \`${newCount}\`. Do you want to continue?`,
 			components: buttons,
 		});
 		const button = await reply
@@ -85,12 +85,12 @@ export default class CountSet
 		if (button) {
 			await button.deferUpdate();
 			if (button.customId === "yeschange") {
-				serverCount.count = newCount;
-				if (serverCount.highestCount < serverCount.count)
+				serverCount.counts = newCount;
+				if (serverCount.highestCount < serverCount.counts)
 					serverCount.highestCount = newCount;
 				await serverCount.save();
 				await button.editReply({
-					content: `Done! New count has been set to \`${serverCount.count}\``,
+					content: `Done! New count has been set to \`${serverCount.counts}\``,
 					components: disableButtons(buttons),
 				});
 			} else {
