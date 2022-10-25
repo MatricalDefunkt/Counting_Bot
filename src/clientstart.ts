@@ -57,6 +57,39 @@ for (const contextMenu of contextMenus) {
 	client.contextMenus.set(contextMenu.name, contextMenu);
 }
 
+globalThis.getServerConfig = async function (guildId) {
+	const config =
+		ServerConfigs.get(guildId) ?? (await Configs.findByPk(guildId));
+	if (config) return config;
+	const newConfig = new Configs();
+	newConfig.guildId = guildId;
+	await newConfig.save();
+	ServerConfigs.set(guildId, newConfig);
+	return newConfig;
+};
+
+globalThis.getServerCount = async function (guildId) {
+	const config = ServerCounts.get(guildId) ?? (await Counts.findByPk(guildId));
+	if (config) return config;
+	const newCount = new Counts();
+	newCount.guildId = guildId;
+	await newCount.save();
+	ServerCounts.set(guildId, newCount);
+	return newCount;
+};
+
+globalThis.getMemberCount = async function (memberId, guildId) {
+	const memberCount = await MemberCounts.findOne({
+		where: { userId: memberId, guildId },
+	});
+	if (memberCount) return memberCount;
+	const newMemberCount = new MemberCounts();
+	newMemberCount.guildId = guildId;
+	newMemberCount.userId = memberId;
+	await newMemberCount.save();
+	return newMemberCount;
+};
+
 client.on("ready", async (loggedInClient) => {
 	if (registerCommandsBool === "true") {
 		registerCommands(
@@ -65,27 +98,39 @@ client.on("ready", async (loggedInClient) => {
 			client.contextMenus
 		);
 	}
-	for (const event of events) {
-		await event.handler(client);
-	}
 	console.log(`${loggedInClient.user.tag} has logged in.`);
 	const testChannel = await client.channels.fetch(testChannelId, {
 		force: false,
 		cache: true,
 	});
-	if (testChannel?.type !== ChannelType.GuildText)
+	if (!testChannel) throw new Error("No test channel was found.");
+	if (testChannel.type !== ChannelType.GuildText)
 		throw new TypeError(
-			`Invalid channel type. Expected "ChannelType.GuildText", got ${testChannel?.type}`
+			`Invalid channel type. Expected "ChannelType.GuildText", got ${testChannel.type}`
 		);
-	testChannel.send({
-		content: `${loggedInClient.user.tag} has logged in with ${
-			loggedInClient.guilds.cache.size
-		} servers in cache, and ${
-			loggedInClient.users.cache.size
-		} members in cache, on <t:${Math.trunc(
-			loggedInClient.readyTimestamp / 1000
-		)}:F>`,
+	else
+		testChannel.send({
+			content: `${loggedInClient.user.tag} has logged in with ${
+				loggedInClient.guilds.cache.size
+			} servers in cache, and ${
+				loggedInClient.users.cache.size
+			} members in cache, on <t:${Math.trunc(
+				loggedInClient.readyTimestamp / 1000
+			)}:F>`,
+		});
+	await client.application?.fetch();
+	globalThis.BotClient = loggedInClient;
+	loggedInClient.user.setPresence({
+		activities: [
+			{
+				name: "the race to the highest count!",
+				type: ActivityType.Competing,
+			}, // Shows as "Competing in {name}"
+		],
 	});
+	for (const event of events) {
+		await event.handler(client);
+	}
 });
 
 (async (token: string) => {
@@ -103,24 +148,15 @@ client.on("ready", async (loggedInClient) => {
 	globalThis.ServerCounts = localServerCounts;
 
 	await client.login(token);
-	client.once("ready", async (loggedInClient) => {
-		await client.application?.fetch();
-		globalThis.BotClient = loggedInClient;
-		loggedInClient.user.setPresence({
-			activities: [
-				{
-					name: "the race to the highest count!",
-					type: ActivityType.Competing,
-				},
-			],
-		});
-	});
 })(token);
 
 if (!process.env.ERRORWEBHOOKURL)
 	process.emitWarning(
-		'Webhook URL has not been specified in ".env". Errors will not be logged in Discord.'
+		'Webhook URL has not been specified in ".env". Errors will not be posted to Discord.'
 	);
 
+process.on("warning", Logger.error);
 process.on("unhandledRejection", Logger.error);
 process.on("uncaughtException", Logger.error);
+client.on("debug", Logger.debug);
+client.on("error", console.log);
