@@ -8,7 +8,11 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import { Op } from "sequelize";
-import { createPaginationButtons } from "../utils/buttonCreators";
+import {
+	createPaginationButtons,
+	disableButtons,
+	enableButtons,
+} from "../utils/buttonCreators";
 import { createLeaderboardEmbed } from "../utils/embedCreators";
 import { MemberCounts } from "../database/database";
 import { ChatInputCommand } from "../types/interfaces";
@@ -56,6 +60,7 @@ export default class Leaderboard
 			});
 		}
 		const pageButtons = createPaginationButtons();
+		embed.setFooter({ text: `Page ${pageIndex + 1} of ${pages}` });
 		const reply = await interaction.editReply({
 			embeds: [embed],
 			components: pageButtons,
@@ -63,19 +68,20 @@ export default class Leaderboard
 		const collector = new InteractionCollector<ButtonInteraction>(
 			interaction.client,
 			{
-				filter: (i) => i.isButton() && i.user.id === interaction.user.id,
 				time: 60000,
 				componentType: ComponentType.Button,
 				message: reply,
 			}
 		);
 		collector.on("collect", async (button) => {
-			await button.deferUpdate();
+			await button.update({ components: disableButtons(pageButtons) });
+
 			switch (button.customId) {
 				case "next":
 					if (pageIndex === pages - 1) {
 						await button.editReply({
 							content: "You are already on the last page!",
+							components: enableButtons(pageButtons),
 						});
 						break;
 					}
@@ -89,36 +95,18 @@ export default class Leaderboard
 						offset: pageIndex * 10,
 					});
 
-					const newLeaderboard = newMemberCounts.map(
-						(memberCount) =>
-							`Last number counted: ${memberCount.lastCount}
-							Total numbers counted: ${memberCount.count}
-							Began counting on: <t:${Math.trunc(memberCount.createdAt.getTime() / 1000)}>
-							Last counted on: <t:${Math.trunc(memberCount.lastCountTime.getTime() / 1000)}>`
-					);
-
-					const newEmbed = new EmbedBuilder()
-						.setTitle("Counting Leaderboard")
-						.setDescription(
-							"Leaderboard is created on the basis of the number of times a user has counted.\nOnly the top 10 users are shown, for now."
-						);
-
-					for (const [index, memberCount] of newMemberCounts.entries()) {
-						const user = await interaction.client.users.fetch(
-							memberCount.userId
-						);
-						newEmbed.addFields({
-							name: `${pageIndex + index + 1}. ${user.tag}`,
-							value: newLeaderboard[index],
-						});
-					}
+					const newEmbed = await createLeaderboardEmbed({
+						pageNumber: pageIndex,
+						memberCounts: newMemberCounts,
+						interaction,
+					});
 
 					newEmbed.setFooter({ text: `Page ${pageIndex + 1} of ${pages}` });
 
 					await button.editReply({
 						content: ``,
 						embeds: [newEmbed],
-						components: pageButtons,
+						components: enableButtons(pageButtons),
 					});
 
 					break;
@@ -127,6 +115,7 @@ export default class Leaderboard
 					if (pageIndex === 0) {
 						await button.editReply({
 							content: "You are already on the first page!",
+							components: enableButtons(pageButtons),
 						});
 						break;
 					}
@@ -141,6 +130,7 @@ export default class Leaderboard
 					});
 
 					const newEmbed1 = await createLeaderboardEmbed({
+						pageNumber: pageIndex,
 						interaction,
 						memberCounts: newMemberCounts1,
 					});
@@ -150,7 +140,7 @@ export default class Leaderboard
 					await button.editReply({
 						content: ``,
 						embeds: [newEmbed1],
-						components: pageButtons,
+						components: enableButtons(pageButtons),
 					});
 
 					break;
@@ -158,6 +148,7 @@ export default class Leaderboard
 					if (pageIndex === 0) {
 						await button.editReply({
 							content: "You are already on the first page!",
+							components: enableButtons(pageButtons),
 						});
 						break;
 					}
@@ -172,6 +163,7 @@ export default class Leaderboard
 					});
 
 					const newEmbed2 = await createLeaderboardEmbed({
+						pageNumber: pageIndex,
 						interaction,
 						memberCounts: newMemberCounts2,
 					});
@@ -181,7 +173,7 @@ export default class Leaderboard
 					await button.editReply({
 						content: ``,
 						embeds: [newEmbed2],
-						components: pageButtons,
+						components: enableButtons(pageButtons),
 					});
 
 					break;
@@ -189,6 +181,7 @@ export default class Leaderboard
 					if (pageIndex === pages - 1) {
 						await button.editReply({
 							content: "You are already on the last page!",
+							components: enableButtons(pageButtons),
 						});
 						break;
 					}
@@ -203,6 +196,7 @@ export default class Leaderboard
 					});
 
 					const newEmbed3 = await createLeaderboardEmbed({
+						pageNumber: pageIndex,
 						interaction,
 						memberCounts: newMemberCounts3,
 					});
@@ -212,9 +206,16 @@ export default class Leaderboard
 					await button.editReply({
 						content: ``,
 						embeds: [newEmbed3],
-						components: pageButtons,
+						components: enableButtons(pageButtons),
 					});
 			}
+		});
+		collector.on("end", () => {
+			interaction.editReply({
+				content:
+					"The leaderboard has expired. Please use the command again to interact with it again.",
+				components: disableButtons(pageButtons),
+			});
 		});
 	};
 

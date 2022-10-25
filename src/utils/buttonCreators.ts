@@ -16,8 +16,8 @@ import {
  * @returns {ActionRowBuilder<ButtonBuilder>[]}Action row with the buttons
  */
 export const createConfirmationButtons = (
-	confirmCustomId: string,
-	cancelCustomId: string
+	confirmCustomId: string = "yes",
+	cancelCustomId: string = "no"
 ) => {
 	const row = [
 		new ActionRowBuilder<ButtonBuilder>().addComponents([
@@ -38,7 +38,7 @@ export const createConfirmationButtons = (
 
 /**
  * Use an action row to disable its buttons.
- * @param {ActionRowBuilder<ButtonBuilder>} actionRow The message or action row whose buttons you want to disable.
+ * @param {ActionRowBuilder<ButtonBuilder>} actionRow The action row whose buttons you want to disable.
  * @returns {ActionRowBuilder<ButtonBuilder>}
  */
 export function disableButtons(
@@ -46,7 +46,7 @@ export function disableButtons(
 ): ActionRowBuilder<ButtonBuilder>;
 /**
  * Use an action row array to disable its buttons.
- * @param {ActionRowBuilder<ButtonBuilder>[]} actionRows The message or action row whose buttons you want to disable.
+ * @param {ActionRowBuilder<ButtonBuilder>[]} actionRows The action row array whose buttons you want to disable.
  * @returns {ActionRowBuilder<ButtonBuilder>[]}
  */
 export function disableButtons(
@@ -54,7 +54,7 @@ export function disableButtons(
 ): ActionRowBuilder<ButtonBuilder>[];
 /**
  * Use a message to disable its buttons.
- * @param {Message} message The message or action row whose buttons you want to disable.
+ * @param {Message} message The message whose buttons you want to disable.
  * @returns {Message}
  */
 export function disableButtons(
@@ -107,9 +107,80 @@ export function disableButtons(
 	}
 }
 
+/**
+ * Use an action row to enable its buttons.
+ * @param {ActionRowBuilder<ButtonBuilder>} actionRow The action row whose buttons you want to enable.
+ * @returns {ActionRowBuilder<ButtonBuilder>}
+ */
+export function enableButtons(
+	actionRow: ActionRowBuilder<ButtonBuilder>
+): ActionRowBuilder<ButtonBuilder>;
+/**
+ * Use an action row array to enable its buttons.
+ * @param {ActionRowBuilder<ButtonBuilder>[]} actionRows The action row array whose buttons you want to enable.
+ * @returns {ActionRowBuilder<ButtonBuilder>[]}
+ */
+export function enableButtons(
+	actionRows: ActionRowBuilder<ButtonBuilder>[]
+): ActionRowBuilder<ButtonBuilder>[];
+/**
+ * Use a message to enable its buttons.
+ * @param {Message} message The message whose buttons you want to enable.
+ * @returns {Message}
+ */
+export function enableButtons(
+	message: Message
+): ActionRowBuilder<ButtonBuilder>[];
+/**
+ * Use a message or an action row to enable its buttons.
+ * @param {Message | ActionRowBuilder<ButtonBuilder> | ActionRowBuilder<ButtonBuilder>[]} messageOrActionRow The message or action row whose buttons you want to enable.
+ * @returns {ActionRowBuilder<ButtonBuilder>[]}
+ */
+export function enableButtons(
+	messageOrActionRow:
+		| Message
+		| ActionRowBuilder<ButtonBuilder>
+		| ActionRowBuilder<ButtonBuilder>[]
+) {
+	if (messageOrActionRow instanceof Message) {
+		const actionRows = messageOrActionRow.components;
+		const finalActionRows: ActionRowBuilder<ButtonBuilder>[] = [];
+		actionRows.forEach((actionRow) => {
+			const newButtonArray: ButtonBuilder[] = [];
+
+			const messageButtons = actionRow.components.filter(
+				(component) => component.type === ComponentType.Button
+			) as ButtonComponent[];
+			messageButtons.forEach((button) => {
+				const newButton = ButtonBuilder.from(button);
+				newButton.setDisabled(false);
+				newButtonArray.push(newButton);
+			});
+			const newActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+				newButtonArray
+			);
+			finalActionRows.push(newActionRow);
+		});
+		return finalActionRows;
+	} else if (messageOrActionRow instanceof ActionRowBuilder<ButtonBuilder>) {
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+			messageOrActionRow.components.map((button) => button.setDisabled(false))
+		);
+	} else if (
+		messageOrActionRow instanceof Array<ActionRowBuilder<ButtonBuilder>>
+	) {
+		const returnArray: ActionRowBuilder<ButtonBuilder>[] = [];
+		messageOrActionRow.forEach((actionRow) => {
+			actionRow.components.forEach((button) => button.setDisabled(false));
+			returnArray.push(actionRow);
+		});
+		return returnArray;
+	}
+}
+
 export const createPaginationButtons = (
 	customIdNext: string = "next",
-	customIdPrevious: string = "prev",
+	customIdPrevious: string = "previous",
 	customIdFirst: string = "first",
 	custOmIdLast: string = "last"
 ) => {
