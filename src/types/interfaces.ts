@@ -42,6 +42,11 @@ export interface BaseCommand<Cached extends CacheType = CacheType> {
 		interaction: ChatInputCommandInteraction<Cached>,
 		code: CommandCancelCodes
 	) => Promise<any> | void;
+	/**
+	 * Whether the command is reserverd for the beta bot only.
+	 * @default false
+	 */
+	betaOnly?: boolean;
 }
 
 export interface ChatInputCommand<Cached extends CacheType = CacheType>
@@ -167,6 +172,11 @@ export interface ContextMenu extends ContextMenuCommandBuilder {
 	 * @default true
 	 */
 	canBeDeferred?: boolean;
+	/**
+	 * Whether the command is reserverd for the beta bot only.
+	 * @default false
+	 */
+	betaOnly?: boolean;
 }
 
 export interface Event {
@@ -179,4 +189,23 @@ export interface Event {
 	 * @param client The client to add listeners for.
 	 */
 	handler: (client: CommandClient<true>) => any;
+}
+
+export enum ActionTypes {
+	Get,
+	Set,
+	Delete,
+}
+
+export enum ConfigRoleTypes {
+	Staff = "staffRoleId",
+}
+
+export enum ConfigChannelTypes {
+	Counting = "countingChannelId",
+}
+
+export enum ConfigBoolTypes {
+	["Reset if wrong"] = "resetIfWrong",
+	["Delete if wrong"] = "deleteIfWrong",
 }
