@@ -14,7 +14,7 @@ export default class Leaderboard
 	execute: ChatInputCommand<"cached">["execute"] = async (interaction) => {
 		const memberCounts = await MemberCounts.findAll({
 			where: { guildId: interaction.guildId },
-			attributes: ["userId", "count", "lastCount", "createdAt"],
+			attributes: ["userId", "counts", "lastCount", "createdAt"],
 		});
 		if (memberCounts.length === 0) {
 			return interaction.reply({
