@@ -29,8 +29,8 @@ export class CountingHandler implements Event {
 							guildId,
 							count: 0,
 							highestCount: 0,
-							lastMessageId: "N/A",
-							lastCounterId: "N/A",
+							lastMessageId: message.id,
+							lastCounterId: message.author.id,
 						}));
 					ServerCounts.set(serverCount.guildId, serverCount);
 					console.error("Did not find server count for " + guildId);
@@ -46,7 +46,7 @@ export class CountingHandler implements Event {
 						})) ??
 						(await MemberCounts.create({
 							guildId,
-							counts: 0,
+							count: 0,
 							lastCount: 0,
 							userId: message.author.id,
 						}));
@@ -69,7 +69,7 @@ export class CountingHandler implements Event {
 							await message.channel.send({
 								embeds: [
 									new EmbedBuilder()
-										.setTitle("The counting has been spoiled!")
+										.setTitle("The count has been spoiled!")
 										.setDescription(
 											`${message.author} sent \`${number}\` instead of \`${expectedCount}\`! :(
 											The count has been reset to \`0\`. Start again by sending \`1\`.`
@@ -88,7 +88,7 @@ export class CountingHandler implements Event {
 						ServerCounts.delete(guildId);
 						ServerCounts.set(guildId, serverCount);
 
-						memberCount.counts += 1;
+						memberCount.count += 1;
 						memberCount.lastCount = number;
 						await memberCount.save();
 					}
