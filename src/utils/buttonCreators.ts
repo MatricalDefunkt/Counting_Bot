@@ -106,3 +106,36 @@ export function disableButtons(
 		return returnArray;
 	}
 }
+
+export const createPaginationButtons = (
+	customIdNext: string = "next",
+	customIdPrevious: string = "prev",
+	customIdFirst: string = "first",
+	custOmIdLast: string = "last"
+) => {
+	const row = [
+		new ActionRowBuilder<ButtonBuilder>().addComponents([
+			new ButtonBuilder()
+				.setCustomId(customIdFirst)
+				.setEmoji("⏮")
+				.setLabel("First")
+				.setStyle(ButtonStyle.Secondary),
+			new ButtonBuilder()
+				.setCustomId(customIdPrevious)
+				.setEmoji("◀")
+				.setLabel("Previous")
+				.setStyle(ButtonStyle.Primary),
+			new ButtonBuilder()
+				.setCustomId(customIdNext)
+				.setEmoji("▶")
+				.setLabel("Next")
+				.setStyle(ButtonStyle.Primary),
+			new ButtonBuilder()
+				.setCustomId(custOmIdLast)
+				.setEmoji("⏭")
+				.setLabel("Last")
+				.setStyle(ButtonStyle.Secondary),
+		]),
+	];
+	return row;
+};

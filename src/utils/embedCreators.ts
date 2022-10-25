@@ -2,6 +2,7 @@
 
 import { EmbedBuilder, Guild, GuildMember } from "discord.js";
 import { MemberCounts } from "../database/database";
+import { CommandInteraction } from "discord.js";
 
 export enum CountEmbedTypes {
 	MemberCountEmbed,
@@ -63,4 +64,35 @@ export async function createCountEmbed(
 		);
 		return embed;
 	} else return new EmbedBuilder();
+}
+
+export async function createLeaderboardEmbed({
+	interaction,
+	memberCounts,
+}: {
+	interaction: CommandInteraction<"cached">;
+	memberCounts: MemberCounts[];
+}): Promise<EmbedBuilder> {
+	const embed = new EmbedBuilder();
+	embed.setTitle(`Counting Leaderboard`);
+	embed.setDescription(
+		`Leaderboard for ${interaction.guild.name}!\nLeaderboard is calculated by the number of times members of the server have counted.`
+	);
+	const leaderboard = memberCounts.map(
+		(memberCount) =>
+			`Last number counted: ${memberCount.lastCount}
+			Total numbers counted: ${memberCount.count}
+			Began counting on: <t:${Math.trunc(memberCount.createdAt.getTime() / 1000)}>
+			Last counted on: <t:${Math.trunc(memberCount.lastCountTime.getTime() / 1000)}>`
+	);
+	for (const [index, value] of leaderboard.entries()) {
+		const member = await interaction.guild.members.fetch(
+			memberCounts[index].userId
+		);
+		embed.addFields({
+			name: `${index + 1}. ${member.displayName}#${member.user.discriminator}`,
+			value,
+		});
+	}
+	return embed;
 }
