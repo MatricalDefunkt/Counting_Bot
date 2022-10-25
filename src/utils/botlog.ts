@@ -33,13 +33,13 @@ export class Logger {
 	public static error(error: string | Buffer) {
 		if (error instanceof Buffer) {
 			console.error(error.toString().trim());
-		} else console.trace(String(error).trim());
+		} else console.log(String(error).trim());
 		Logger._appendLog(error, "error");
 	}
 	private static _appendLog(data: string | Buffer, type: LogTypes) {
 		appendFileSync(
 			`${process.cwd()}/src/logs/${type}log.log`,
-			`${new Date()} ||> ${data}`,
+			`${new Date()} ||> ${data}\n`,
 			{
 				encoding: "utf8",
 			}
