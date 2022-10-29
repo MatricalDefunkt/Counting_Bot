@@ -27,13 +27,19 @@ declare global {
 	 * @param {string} guildId The id of the server.
 	 * @returns {Promise<Configs>} The server configuration.
 	 */
-	function getServerConfig(guildId: string): Promise<Configs>;
+	function getServerConfig(
+		guildId: string,
+		defaults?: Partial<Configs>
+	): Promise<Configs>;
 	/**
 	 * Global method to get the server count (or create if one doesn't exist) for a server.
 	 * @param {string} guildId The id of the server.
 	 * @returns {Promise<Counts>} The server count.
 	 */
-	function getServerCount(guildId: string): Promise<Counts>;
+	function getServerCount(
+		guildId: string,
+		defaults?: Partial<Counts>
+	): Promise<Counts>;
 	/**
 	 * Global method to get the count of a member in a server (or create if one doesn't exist).
 	 * @param {string} memberId The id of the member.
@@ -42,6 +48,13 @@ declare global {
 	 */
 	function getMemberCount(
 		memberId: string,
-		guildId: string
+		guildId: string,
+		defaults?: Partial<MemberCounts>
 	): Promise<MemberCounts>;
+	/**
+	 * Global method to get a command and its ID
+	 * @param {string} commandName The name of the command.
+	 * @returns {Promise<BotCommands>} The command.
+	 */
+	function getCommand(commandName: string): Promise<BotCommands>;
 }

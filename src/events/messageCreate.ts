@@ -2,7 +2,7 @@
 
 import { Event } from "../types/interfaces";
 import { CommandClient } from "../clientstart";
-import { PermissionFlagsBits, PermissionsBitField } from "discord.js";
+import { PermissionFlagsBits } from "discord.js";
 
 export class MessageCreate implements Event {
 	name = "messageCreate";
@@ -26,7 +26,9 @@ export class MessageCreate implements Event {
 								PermissionFlagsBits.Administrator &&
 									PermissionFlagsBits.ManageGuild
 							)
-								? `To configure me, you can use the command </config:1005198901218914425>.`
+								? `To configure me, you can use the command ${
+										(await getCommand("config")) ?? "</config:0>"
+								  }.`
 								: ``
 						}`,
 					});

@@ -14,7 +14,12 @@ import { registerCommands } from "./utils/registerCommands";
 import commands from "./commands/exports";
 import contextMenus from "./contextmenus/exports";
 import events from "./events/exports";
-import { Configs, Counts, MemberCounts } from "./database/database";
+import {
+	BotCommands,
+	Configs,
+	Counts,
+	MemberCounts,
+} from "./database/database";
 import { Logger } from "./utils/botlog";
 
 const registerCommandsBool = process.argv[2];
@@ -57,28 +62,40 @@ for (const contextMenu of contextMenus) {
 	client.contextMenus.set(contextMenu.name, contextMenu);
 }
 
-globalThis.getServerConfig = async function (guildId) {
+globalThis.getServerConfig = async function (guildId, defaults) {
 	const config =
 		ServerConfigs.get(guildId) ?? (await Configs.findByPk(guildId));
 	if (config) return config;
 	const newConfig = new Configs();
 	newConfig.guildId = guildId;
+	if (defaults) {
+		newConfig.countingChannelId = defaults.countingChannelId ?? "";
+		newConfig.deleteIfWrong = defaults.deleteIfWrong ?? false;
+		newConfig.resetIfWrong = defaults.resetIfWrong ?? false;
+		newConfig.staffRoleId = defaults.staffRoleId ?? "";
+	}
 	await newConfig.save();
 	ServerConfigs.set(guildId, newConfig);
 	return newConfig;
 };
 
-globalThis.getServerCount = async function (guildId) {
+globalThis.getServerCount = async function (guildId, defaults) {
 	const config = ServerCounts.get(guildId) ?? (await Counts.findByPk(guildId));
 	if (config) return config;
 	const newCount = new Counts();
 	newCount.guildId = guildId;
+	if (defaults) {
+		newCount.count = defaults.count ?? 0;
+		newCount.highestCount = defaults.highestCount ?? 0;
+		newCount.lastCounterId = defaults.lastCounterId ?? "";
+		newCount.lastMessageId = defaults.lastMessageId ?? "";
+	}
 	await newCount.save();
 	ServerCounts.set(guildId, newCount);
 	return newCount;
 };
 
-globalThis.getMemberCount = async function (memberId, guildId) {
+globalThis.getMemberCount = async function (memberId, guildId, defaults) {
 	const memberCount = await MemberCounts.findOne({
 		where: { userId: memberId, guildId },
 	});
@@ -86,8 +103,17 @@ globalThis.getMemberCount = async function (memberId, guildId) {
 	const newMemberCount = new MemberCounts();
 	newMemberCount.guildId = guildId;
 	newMemberCount.userId = memberId;
+	if (defaults) {
+		newMemberCount.count = defaults.count ?? 0;
+		newMemberCount.lastCount = defaults.lastCount ?? 0;
+	}
 	await newMemberCount.save();
 	return newMemberCount;
+};
+
+globalThis.getCommand = async function (name) {
+	const command = await BotCommands.findOne({ where: { commandName: name } });
+	return command;
 };
 
 client.on("ready", async (loggedInClient) => {

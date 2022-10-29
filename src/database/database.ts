@@ -1,5 +1,6 @@
 /** @format */
 
+import { ApplicationCommandType } from "discord.js";
 import { Sequelize, DataTypes, Model } from "sequelize";
 
 const sequelize = new Sequelize("database", "user", "pass", {
@@ -166,7 +167,7 @@ export class MemberCounts extends Model<{
 	}
 	public get createdAt() {
 		//@ts-ignore
-		return this.getDataValue("updatedAt") as Date;
+		return this.getDataValue("createdAt") as Date;
 	}
 	private _onUpdate() {
 		this.save();
@@ -183,8 +184,44 @@ MemberCounts.init(
 	{ sequelize }
 );
 
-(async () => {
-	await Configs.sync();
-	await Counts.sync();
-	await MemberCounts.sync();
-})();
+export class BotCommands extends Model<{
+	commandName: string;
+	commandId: string;
+	type: ApplicationCommandType;
+}> {
+	public get commandName() {
+		return this.getDataValue("commandName");
+	}
+	public set commandName(newName) {
+		this.setDataValue("commandName", newName);
+	}
+	public get commandId() {
+		return this.getDataValue("commandId");
+	}
+	public set commandId(newId) {
+		this.setDataValue("commandId", newId);
+	}
+	public get type() {
+		return this.getDataValue("type");
+	}
+	public set type(newType) {
+		this.setDataValue("type", newType);
+	}
+	public toString() {
+		return `/:${this.commandName}:${this.commandId}`;
+	}
+}
+
+BotCommands.init(
+	{
+		commandName: { type: DataTypes.TEXT(), primaryKey: true },
+		commandId: { type: DataTypes.TEXT(), primaryKey: true },
+		type: { type: DataTypes.NUMBER() },
+	},
+	{ sequelize }
+);
+
+BotCommands.sync();
+Configs.sync();
+Counts.sync();
+MemberCounts.sync();
