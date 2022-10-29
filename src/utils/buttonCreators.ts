@@ -178,11 +178,21 @@ export function enableButtons(
 	}
 }
 
+/**
+ * Build an action row with pagination buttons.
+ * @param customIdNext The custom id of the "next" button.
+ * @param customIdPrevious The custom id of the "previous" button.
+ * @param customIdFirst The custom id of the "first" button.
+ * @param customIdLast The custom id of the "last" button.
+ * @param customIdGoTo The custom id of the "go to" button.
+ * @returns {ActionRowBuilder<ButtonBuilder>[]} The action row array.
+ */
 export const createPaginationButtons = (
 	customIdNext: string = "next",
 	customIdPrevious: string = "previous",
 	customIdFirst: string = "first",
-	custOmIdLast: string = "last"
+	customIdLast: string = "last",
+	customIdGoTo: string = "goTo"
 ) => {
 	const row = [
 		new ActionRowBuilder<ButtonBuilder>().addComponents([
@@ -202,10 +212,15 @@ export const createPaginationButtons = (
 				.setLabel("Next")
 				.setStyle(ButtonStyle.Primary),
 			new ButtonBuilder()
-				.setCustomId(custOmIdLast)
+				.setCustomId(customIdLast)
 				.setEmoji("⏭")
 				.setLabel("Last")
 				.setStyle(ButtonStyle.Secondary),
+			new ButtonBuilder()
+				.setCustomId(customIdGoTo)
+				.setEmoji("🔍")
+				.setLabel("Go to")
+				.setStyle(ButtonStyle.Primary),
 		]),
 	];
 	return row;
