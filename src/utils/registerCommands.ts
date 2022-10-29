@@ -1,10 +1,11 @@
 /** @format */
 
 import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v10";
+import { ApplicationCommandType, Routes } from "discord-api-types/v10";
 import { Collection } from "discord.js";
 import { ChatInputCommand, ContextMenu } from "../types/interfaces";
 import * as dotenv from "dotenv";
+import { BotCommands } from "src/database/database";
 dotenv.config();
 
 if (!process.env.TOKEN)
@@ -39,8 +40,20 @@ export const registerCommands = async (
 	return rest
 		.setToken(token)
 		.put(Routes.applicationCommands(applicationId), { body: jsonData })
-		.then(() => {
+		.then((commands) => {
 			console.log("Registered commands successfully!");
+			const commandArray = commands as {
+				id: string;
+				name: string;
+				type: ApplicationCommandType;
+			}[];
+			for (const command of commandArray) {
+				const newCommand = new BotCommands();
+				newCommand.commandId = command.id;
+				newCommand.commandName = command.name;
+				newCommand.type = command.type;
+				newCommand.save();
+			}
 			return true;
 		})
 		.catch((reason) => {
