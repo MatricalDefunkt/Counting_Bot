@@ -191,21 +191,36 @@ export interface Event {
 	handler: (client: CommandClient<true>) => any;
 }
 
+export class PaginatorError extends Error {
+	public code: PaginatorErrorCodes;
+	constructor(message: string, code: PaginatorErrorCodes) {
+		super(message);
+		this.code = code;
+	}
+}
+
 export enum ActionTypes {
-	Get,
-	Set,
-	Delete,
+	GET,
+	SET,
+	DELETE,
 }
 
 export enum ConfigRoleTypes {
-	Staff = "staffRoleId",
+	STAFF = "staffRoleId",
 }
 
 export enum ConfigChannelTypes {
-	Counting = "countingChannelId",
+	COUNTING = "countingChannelId",
 }
 
 export enum ConfigBoolTypes {
-	["Reset if wrong"] = "resetIfWrong",
-	["Delete if wrong"] = "deleteIfWrong",
+	["RESET IF WRONG"] = "resetIfWrong",
+	["DELETE IF WRONG"] = "deleteIfWrong",
+}
+
+export enum PaginatorErrorCodes {
+	MAX_PAGE,
+	MIN_PAGE,
+	INVALID_PAGE,
+	NOT_INITIALIZED,
 }

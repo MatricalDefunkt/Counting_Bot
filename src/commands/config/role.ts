@@ -28,7 +28,7 @@ export default class ConfigRole
 		const role = interaction.options.getRole("role");
 		const serverConfig = await getServerConfig(interaction.guildId);
 
-		if (action === ActionTypes.Get) {
+		if (action === ActionTypes.GET) {
 			const role = serverConfig[roleType];
 			return await interaction.editReply({
 				content: `The ${getKeyFromValue(
@@ -36,7 +36,7 @@ export default class ConfigRole
 					roleType
 				).toLowerCase()} role is ${role ? `<@&${role}>` : "not set"}`,
 			});
-		} else if (action === ActionTypes.Set) {
+		} else if (action === ActionTypes.SET) {
 			if (!role)
 				return await interaction.editReply({
 					content: `Please provide a new role using the "role" option.`,
@@ -49,7 +49,7 @@ export default class ConfigRole
 					roleType
 				).toLowerCase()} role has been set to <@&${role.id}>.`,
 			});
-		} else if (action === ActionTypes.Delete) {
+		} else if (action === ActionTypes.DELETE) {
 			const buttons = createConfirmationButtons("yes", "no");
 			const reply = await interaction.editReply({
 				content: `Are you sure you want to delete the \`${getKeyFromValue(
@@ -104,9 +104,9 @@ export default class ConfigRole
 				.setName("action")
 				.setDescription("The action to perform.")
 				.addChoices(
-					{ name: "Get", value: ActionTypes.Get },
-					{ name: "Set", value: ActionTypes.Set },
-					{ name: "Delete", value: ActionTypes.Delete }
+					{ name: "Get", value: ActionTypes.GET },
+					{ name: "Set", value: ActionTypes.SET },
+					{ name: "Delete", value: ActionTypes.DELETE }
 				)
 				.setRequired(true)
 		);
@@ -114,7 +114,7 @@ export default class ConfigRole
 			o
 				.setName("role-type")
 				.setDescription("The role to modify.")
-				.addChoices({ name: "Staff", value: ConfigRoleTypes.Staff })
+				.addChoices({ name: "Staff", value: ConfigRoleTypes.STAFF })
 				.setRequired(true)
 		);
 		this.addRoleOption((o) =>

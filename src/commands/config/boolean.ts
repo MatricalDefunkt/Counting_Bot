@@ -28,7 +28,7 @@ export default class ConfigBoolean
 		const serverConfig = await getServerConfig(interaction.guildId);
 		const newValue = interaction.options.getBoolean("true-false");
 
-		if (action === ActionTypes.Get) {
+		if (action === ActionTypes.GET) {
 			return await interaction.editReply({
 				content: `The \`${getKeyFromValue(
 					ConfigBoolTypes,
@@ -37,7 +37,7 @@ export default class ConfigBoolean
 					serverConfig[optionType] ? "enabled" : "disabled"
 				}`,
 			});
-		} else if (action === ActionTypes.Set) {
+		} else if (action === ActionTypes.SET) {
 			if (newValue === null) {
 				return await interaction.editReply({
 					content: "You must provide a new value to set.",
@@ -52,7 +52,7 @@ export default class ConfigBoolean
 					newValue ? "enabled" : "disabled"
 				}`,
 			});
-		} else if (action === ActionTypes.Delete) {
+		} else if (action === ActionTypes.DELETE) {
 			const buttons = createConfirmationButtons("yes", "no");
 			const reply = await interaction.editReply({
 				content: `Are you sure you want to delete the \`${getKeyFromValue(
@@ -106,9 +106,9 @@ export default class ConfigBoolean
 				.setName("action")
 				.setDescription("The action to perform.")
 				.addChoices(
-					{ name: "Get", value: ActionTypes.Get },
-					{ name: "Set", value: ActionTypes.Set },
-					{ name: "Delete", value: ActionTypes.Delete }
+					{ name: "Get", value: ActionTypes.GET },
+					{ name: "Set", value: ActionTypes.SET },
+					{ name: "Delete", value: ActionTypes.DELETE }
 				)
 				.setRequired(true)
 		);
@@ -119,11 +119,11 @@ export default class ConfigBoolean
 				.addChoices(
 					{
 						name: 'Reset if wrong (Overrides "delete if wrong")',
-						value: ConfigBoolTypes["Reset if wrong"],
+						value: ConfigBoolTypes["RESET IF WRONG"],
 					},
 					{
 						name: "Delete if wrong",
-						value: ConfigBoolTypes["Delete if wrong"],
+						value: ConfigBoolTypes["DELETE IF WRONG"],
 					}
 				)
 				.setRequired(true)

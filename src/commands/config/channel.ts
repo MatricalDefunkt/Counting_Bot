@@ -34,7 +34,7 @@ export default class ConfigChannel
 		const channel = interaction.options.getChannel("channel");
 		const serverConfig = await getServerConfig(interaction.guildId);
 
-		if (action === ActionTypes.Get) {
+		if (action === ActionTypes.GET) {
 			const storedChannelId = serverConfig[channelType];
 			interaction.editReply({
 				content: `The ${getKeyFromValue(
@@ -44,7 +44,7 @@ export default class ConfigChannel
 					storedChannelId ? `<#${storedChannelId}>` : "not set."
 				}`,
 			});
-		} else if (action === ActionTypes.Set) {
+		} else if (action === ActionTypes.SET) {
 			if (!channel)
 				return await interaction.editReply({
 					content: `Please provide a new channel using the "channel" option.`,
@@ -75,7 +75,7 @@ export default class ConfigChannel
 						channelType
 					).toLowerCase()} channel has been set to <#${channel.id}>.`,
 				});
-				if (channelType === ConfigChannelTypes.Counting) {
+				if (channelType === ConfigChannelTypes.COUNTING) {
 					const newCountEmbed = new EmbedBuilder();
 					newCountEmbed
 						.setTitle("And so it begins...")
@@ -98,7 +98,7 @@ export default class ConfigChannel
 					});
 				}
 			}
-		} else if (action === ActionTypes.Delete) {
+		} else if (action === ActionTypes.DELETE) {
 			const buttons = createConfirmationButtons("yes", "no");
 			const reply = await interaction.editReply({
 				content: `Are you sure you want to delete the \`${getKeyFromValue(
@@ -155,9 +155,9 @@ export default class ConfigChannel
 					"Whether you want to set, get or delete this configuration."
 				)
 				.addChoices(
-					{ name: "Get", value: ActionTypes.Get },
-					{ name: "Set", value: ActionTypes.Set },
-					{ name: "Delete", value: ActionTypes.Delete }
+					{ name: "Get", value: ActionTypes.GET },
+					{ name: "Set", value: ActionTypes.SET },
+					{ name: "Delete", value: ActionTypes.DELETE }
 				)
 				.setRequired(true)
 		);
@@ -165,7 +165,7 @@ export default class ConfigChannel
 			o
 				.setName("channel-type")
 				.setDescription("The type of channel you want to configure.")
-				.addChoices({ name: "Counting", value: ConfigChannelTypes.Counting })
+				.addChoices({ name: "Counting", value: ConfigChannelTypes.COUNTING })
 				.setRequired(true)
 		);
 		this.addChannelOption((o) =>
