@@ -6,8 +6,8 @@ import ConfigChannel from "./channel";
 import ConfigRole from "./role";
 
 const subCommands: SubCommand<"cached">[] = [
-	new ConfigChannel(),
-	new ConfigRole(),
-	new ConfigBoolean(),
+  new ConfigChannel(),
+  new ConfigRole(),
+  new ConfigBoolean(),
 ];
 export default subCommands;

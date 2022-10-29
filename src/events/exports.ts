@@ -9,11 +9,11 @@ import { MessageCreate } from "./messageCreate";
 import { MessageDelete } from "./messageDelete";
 
 const events: Event[] = [
-	new InteractionCreate(),
-	new GuildCreate(),
-	new GuildDelete(),
-	new MessageCreate(),
-	new CountingHandler(),
-	new MessageDelete(),
+  new InteractionCreate(),
+  new GuildCreate(),
+  new GuildDelete(),
+  new MessageCreate(),
+  new CountingHandler(),
+  new MessageDelete(),
 ];
 export default events;

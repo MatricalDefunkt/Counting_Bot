@@ -7,10 +7,10 @@ import Leaderboard from "./leaderboard";
 import Ping from "./ping";
 
 const commands: ChatInputCommand<any>[] = [
-	new Ping(),
-	new Config(),
-	new Eval(),
-	new Count(),
-	new Leaderboard(),
+  new Ping(),
+  new Config(),
+  new Eval(),
+  new Count(),
+  new Leaderboard(),
 ];
 export default commands;

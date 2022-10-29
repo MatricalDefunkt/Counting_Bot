@@ -14,11 +14,11 @@
  * ```
  */
 export function getKeyFromValue<TValueType>(
-	object: { [s: string]: TValueType },
-	value: TValueType
+  object: { [s: string]: TValueType },
+  value: TValueType
 ): string {
-	const key = Object.keys(object).find((key) => Object.is(object[key], value));
-	if (!key)
-		throw new Error("Key was not found. Please ensure key will always exist.");
-	return key;
+  const key = Object.keys(object).find((key) => Object.is(object[key], value));
+  if (!key)
+    throw new Error("Key was not found. Please ensure key will always exist.");
+  return key;
 }

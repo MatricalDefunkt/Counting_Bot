@@ -1,12 +1,12 @@
 /** @format */
 
 import {
-	ActionRowBuilder,
-	ButtonStyle,
-	ButtonBuilder,
-	Message,
-	ComponentType,
-	ButtonComponent,
+  ActionRowBuilder,
+  ButtonStyle,
+  ButtonBuilder,
+  Message,
+  ComponentType,
+  ButtonComponent,
 } from "discord.js";
 
 /**
@@ -16,24 +16,24 @@ import {
  * @returns {ActionRowBuilder<ButtonBuilder>[]}Action row with the buttons
  */
 export const createConfirmationButtons = (
-	confirmCustomId: string = "yes",
-	cancelCustomId: string = "no"
+  confirmCustomId: string = "yes",
+  cancelCustomId: string = "no"
 ) => {
-	const row = [
-		new ActionRowBuilder<ButtonBuilder>().addComponents([
-			new ButtonBuilder()
-				.setCustomId(confirmCustomId)
-				.setEmoji("✅")
-				.setLabel("Confirm")
-				.setStyle(ButtonStyle.Primary),
-			new ButtonBuilder()
-				.setCustomId(cancelCustomId)
-				.setEmoji("❎")
-				.setLabel("Cancel")
-				.setStyle(ButtonStyle.Secondary),
-		]),
-	];
-	return row;
+  const row = [
+    new ActionRowBuilder<ButtonBuilder>().addComponents([
+      new ButtonBuilder()
+        .setCustomId(confirmCustomId)
+        .setEmoji("✅")
+        .setLabel("Confirm")
+        .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId(cancelCustomId)
+        .setEmoji("❎")
+        .setLabel("Cancel")
+        .setStyle(ButtonStyle.Secondary),
+    ]),
+  ];
+  return row;
 };
 
 /**
@@ -42,7 +42,7 @@ export const createConfirmationButtons = (
  * @returns {ActionRowBuilder<ButtonBuilder>}
  */
 export function disableButtons(
-	actionRow: ActionRowBuilder<ButtonBuilder>
+  actionRow: ActionRowBuilder<ButtonBuilder>
 ): ActionRowBuilder<ButtonBuilder>;
 /**
  * Use an action row array to disable its buttons.
@@ -50,7 +50,7 @@ export function disableButtons(
  * @returns {ActionRowBuilder<ButtonBuilder>[]}
  */
 export function disableButtons(
-	actionRows: ActionRowBuilder<ButtonBuilder>[]
+  actionRows: ActionRowBuilder<ButtonBuilder>[]
 ): ActionRowBuilder<ButtonBuilder>[];
 /**
  * Use a message to disable its buttons.
@@ -58,7 +58,7 @@ export function disableButtons(
  * @returns {Message}
  */
 export function disableButtons(
-	message: Message
+  message: Message
 ): ActionRowBuilder<ButtonBuilder>[];
 /**
  * Use a message or an action row to disable its buttons.
@@ -66,45 +66,45 @@ export function disableButtons(
  * @returns {ActionRowBuilder<ButtonBuilder>[]}
  */
 export function disableButtons(
-	messageOrActionRow:
-		| Message
-		| ActionRowBuilder<ButtonBuilder>
-		| ActionRowBuilder<ButtonBuilder>[]
+  messageOrActionRow:
+    | Message
+    | ActionRowBuilder<ButtonBuilder>
+    | ActionRowBuilder<ButtonBuilder>[]
 ) {
-	if (messageOrActionRow instanceof Message) {
-		const actionRows = messageOrActionRow.components;
-		const finalActionRows: ActionRowBuilder<ButtonBuilder>[] = [];
-		actionRows.forEach((actionRow) => {
-			const newButtonArray: ButtonBuilder[] = [];
+  if (messageOrActionRow instanceof Message) {
+    const actionRows = messageOrActionRow.components;
+    const finalActionRows: ActionRowBuilder<ButtonBuilder>[] = [];
+    actionRows.forEach((actionRow) => {
+      const newButtonArray: ButtonBuilder[] = [];
 
-			const messageButtons = actionRow.components.filter(
-				(component) => component.type === ComponentType.Button
-			) as ButtonComponent[];
-			messageButtons.forEach((button) => {
-				const newButton = ButtonBuilder.from(button);
-				newButton.setDisabled(true);
-				newButtonArray.push(newButton);
-			});
-			const newActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-				newButtonArray
-			);
-			finalActionRows.push(newActionRow);
-		});
-		return finalActionRows;
-	} else if (messageOrActionRow instanceof ActionRowBuilder<ButtonBuilder>) {
-		return new ActionRowBuilder<ButtonBuilder>().addComponents(
-			messageOrActionRow.components.map((button) => button.setDisabled(true))
-		);
-	} else if (
-		messageOrActionRow instanceof Array<ActionRowBuilder<ButtonBuilder>>
-	) {
-		const returnArray: ActionRowBuilder<ButtonBuilder>[] = [];
-		messageOrActionRow.forEach((actionRow) => {
-			actionRow.components.forEach((button) => button.setDisabled(true));
-			returnArray.push(actionRow);
-		});
-		return returnArray;
-	}
+      const messageButtons = actionRow.components.filter(
+        (component) => component.type === ComponentType.Button
+      ) as ButtonComponent[];
+      messageButtons.forEach((button) => {
+        const newButton = ButtonBuilder.from(button);
+        newButton.setDisabled(true);
+        newButtonArray.push(newButton);
+      });
+      const newActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        newButtonArray
+      );
+      finalActionRows.push(newActionRow);
+    });
+    return finalActionRows;
+  } else if (messageOrActionRow instanceof ActionRowBuilder<ButtonBuilder>) {
+    return new ActionRowBuilder<ButtonBuilder>().addComponents(
+      messageOrActionRow.components.map((button) => button.setDisabled(true))
+    );
+  } else if (
+    messageOrActionRow instanceof Array<ActionRowBuilder<ButtonBuilder>>
+  ) {
+    const returnArray: ActionRowBuilder<ButtonBuilder>[] = [];
+    messageOrActionRow.forEach((actionRow) => {
+      actionRow.components.forEach((button) => button.setDisabled(true));
+      returnArray.push(actionRow);
+    });
+    return returnArray;
+  }
 }
 
 /**
@@ -113,7 +113,7 @@ export function disableButtons(
  * @returns {ActionRowBuilder<ButtonBuilder>}
  */
 export function enableButtons(
-	actionRow: ActionRowBuilder<ButtonBuilder>
+  actionRow: ActionRowBuilder<ButtonBuilder>
 ): ActionRowBuilder<ButtonBuilder>;
 /**
  * Use an action row array to enable its buttons.
@@ -121,7 +121,7 @@ export function enableButtons(
  * @returns {ActionRowBuilder<ButtonBuilder>[]}
  */
 export function enableButtons(
-	actionRows: ActionRowBuilder<ButtonBuilder>[]
+  actionRows: ActionRowBuilder<ButtonBuilder>[]
 ): ActionRowBuilder<ButtonBuilder>[];
 /**
  * Use a message to enable its buttons.
@@ -129,7 +129,7 @@ export function enableButtons(
  * @returns {Message}
  */
 export function enableButtons(
-	message: Message
+  message: Message
 ): ActionRowBuilder<ButtonBuilder>[];
 /**
  * Use a message or an action row to enable its buttons.
@@ -137,45 +137,45 @@ export function enableButtons(
  * @returns {ActionRowBuilder<ButtonBuilder>[]}
  */
 export function enableButtons(
-	messageOrActionRow:
-		| Message
-		| ActionRowBuilder<ButtonBuilder>
-		| ActionRowBuilder<ButtonBuilder>[]
+  messageOrActionRow:
+    | Message
+    | ActionRowBuilder<ButtonBuilder>
+    | ActionRowBuilder<ButtonBuilder>[]
 ) {
-	if (messageOrActionRow instanceof Message) {
-		const actionRows = messageOrActionRow.components;
-		const finalActionRows: ActionRowBuilder<ButtonBuilder>[] = [];
-		actionRows.forEach((actionRow) => {
-			const newButtonArray: ButtonBuilder[] = [];
+  if (messageOrActionRow instanceof Message) {
+    const actionRows = messageOrActionRow.components;
+    const finalActionRows: ActionRowBuilder<ButtonBuilder>[] = [];
+    actionRows.forEach((actionRow) => {
+      const newButtonArray: ButtonBuilder[] = [];
 
-			const messageButtons = actionRow.components.filter(
-				(component) => component.type === ComponentType.Button
-			) as ButtonComponent[];
-			messageButtons.forEach((button) => {
-				const newButton = ButtonBuilder.from(button);
-				newButton.setDisabled(false);
-				newButtonArray.push(newButton);
-			});
-			const newActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-				newButtonArray
-			);
-			finalActionRows.push(newActionRow);
-		});
-		return finalActionRows;
-	} else if (messageOrActionRow instanceof ActionRowBuilder<ButtonBuilder>) {
-		return new ActionRowBuilder<ButtonBuilder>().addComponents(
-			messageOrActionRow.components.map((button) => button.setDisabled(false))
-		);
-	} else if (
-		messageOrActionRow instanceof Array<ActionRowBuilder<ButtonBuilder>>
-	) {
-		const returnArray: ActionRowBuilder<ButtonBuilder>[] = [];
-		messageOrActionRow.forEach((actionRow) => {
-			actionRow.components.forEach((button) => button.setDisabled(false));
-			returnArray.push(actionRow);
-		});
-		return returnArray;
-	}
+      const messageButtons = actionRow.components.filter(
+        (component) => component.type === ComponentType.Button
+      ) as ButtonComponent[];
+      messageButtons.forEach((button) => {
+        const newButton = ButtonBuilder.from(button);
+        newButton.setDisabled(false);
+        newButtonArray.push(newButton);
+      });
+      const newActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        newButtonArray
+      );
+      finalActionRows.push(newActionRow);
+    });
+    return finalActionRows;
+  } else if (messageOrActionRow instanceof ActionRowBuilder<ButtonBuilder>) {
+    return new ActionRowBuilder<ButtonBuilder>().addComponents(
+      messageOrActionRow.components.map((button) => button.setDisabled(false))
+    );
+  } else if (
+    messageOrActionRow instanceof Array<ActionRowBuilder<ButtonBuilder>>
+  ) {
+    const returnArray: ActionRowBuilder<ButtonBuilder>[] = [];
+    messageOrActionRow.forEach((actionRow) => {
+      actionRow.components.forEach((button) => button.setDisabled(false));
+      returnArray.push(actionRow);
+    });
+    return returnArray;
+  }
 }
 
 /**
@@ -188,40 +188,40 @@ export function enableButtons(
  * @returns {ActionRowBuilder<ButtonBuilder>[]} The action row array.
  */
 export const createPaginationButtons = (
-	customIdNext: string = "next",
-	customIdPrevious: string = "previous",
-	customIdFirst: string = "first",
-	customIdLast: string = "last",
-	customIdGoTo: string = "goTo"
+  customIdNext: string = "next",
+  customIdPrevious: string = "previous",
+  customIdFirst: string = "first",
+  customIdLast: string = "last",
+  customIdGoTo: string = "goTo"
 ) => {
-	const row = [
-		new ActionRowBuilder<ButtonBuilder>().addComponents([
-			new ButtonBuilder()
-				.setCustomId(customIdFirst)
-				.setEmoji("⏮")
-				.setLabel("First")
-				.setStyle(ButtonStyle.Secondary),
-			new ButtonBuilder()
-				.setCustomId(customIdPrevious)
-				.setEmoji("◀")
-				.setLabel("Previous")
-				.setStyle(ButtonStyle.Primary),
-			new ButtonBuilder()
-				.setCustomId(customIdNext)
-				.setEmoji("▶")
-				.setLabel("Next")
-				.setStyle(ButtonStyle.Primary),
-			new ButtonBuilder()
-				.setCustomId(customIdLast)
-				.setEmoji("⏭")
-				.setLabel("Last")
-				.setStyle(ButtonStyle.Secondary),
-			new ButtonBuilder()
-				.setCustomId(customIdGoTo)
-				.setEmoji("🔍")
-				.setLabel("Go to")
-				.setStyle(ButtonStyle.Primary),
-		]),
-	];
-	return row;
+  const row = [
+    new ActionRowBuilder<ButtonBuilder>().addComponents([
+      new ButtonBuilder()
+        .setCustomId(customIdFirst)
+        .setEmoji("⏮")
+        .setLabel("First")
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId(customIdPrevious)
+        .setEmoji("◀")
+        .setLabel("Previous")
+        .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId(customIdNext)
+        .setEmoji("▶")
+        .setLabel("Next")
+        .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId(customIdLast)
+        .setEmoji("⏭")
+        .setLabel("Last")
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId(customIdGoTo)
+        .setEmoji("🔍")
+        .setLabel("Go to")
+        .setStyle(ButtonStyle.Primary),
+    ]),
+  ];
+  return row;
 };

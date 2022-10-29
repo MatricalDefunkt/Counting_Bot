@@ -7,8 +7,8 @@ import CountServer from "./server";
 import CountSet from "./set";
 
 const subCommands: SubCommandParent<any>["children"] = [
-	new CountServer(),
-	new CountMember(),
-	new CountSet(),
+  new CountServer(),
+  new CountMember(),
+  new CountSet(),
 ];
 export default subCommands;
