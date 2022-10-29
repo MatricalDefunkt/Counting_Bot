@@ -18,10 +18,12 @@ export class GuildCreate implements Event {
         .createDM()
         .then(async (dmChannel) => {
           await dmChannel.send({
-            content: `Thank you for inviting me to your server! To get started, please use the command /config.`,
+            content: `Thank you for inviting me to your server! To get started, please use the command ${
+              (await getCommand("config")) ?? `</config:0>`
+            }.`,
           });
         })
-        .catch((err) => {
+        .catch(async (err) => {
           if (err.code === 50007) {
             const textChannels = guild.channels.cache.filter(
               (channel) => channel.type === ChannelType.GuildText
@@ -29,7 +31,9 @@ export class GuildCreate implements Event {
             textChannels
               .first()
               ?.send({
-                content: `Thank you for inviting me to your server! To get started, please use the command /config.`,
+                content: `Thank you for inviting me to your server! To get started, please use the command ${
+                  (await getCommand("config")) ?? `</config:0>`
+                }.`,
               })
               .catch(console.error);
           }
