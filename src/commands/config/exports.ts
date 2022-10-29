@@ -1,6 +1,6 @@
 /** @format */
 
-import { SubCommand } from "src/types/interfaces";
+import { SubCommand } from "../../types/interfaces";
 import ConfigBoolean from "./boolean";
 import ConfigChannel from "./channel";
 import ConfigRole from "./role";

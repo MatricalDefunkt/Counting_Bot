@@ -5,7 +5,7 @@ import { ApplicationCommandType, Routes } from "discord-api-types/v10";
 import { Collection } from "discord.js";
 import { ChatInputCommand, ContextMenu } from "../types/interfaces";
 import * as dotenv from "dotenv";
-import { BotCommands } from "src/database/database";
+import { BotCommands } from "../database/database";
 dotenv.config();
 
 if (!process.env.TOKEN)
