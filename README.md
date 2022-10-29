@@ -52,7 +52,7 @@ Assuming that you have downloaded and installed NodeJS, and extracted the source
   <li>Create a folder names <kbd>logs</kbd> (casing matters).</li>
   <li>Open an instance of a shell in the folder.</li>
   <li>Run the command <kbd>npm install --save-dev</kbd> in the shell window.</li>
-  <li>Run the command <kbd>npm run start</kbd> in the shell window once the previous command succeeds.</li>
+  <li>Run the command <kbd>npx ts-node ./src/index.ts</kbd> in the shell window once the previous command succeeds.</li>
 </ol>
 
 If you have entered all the data correctly, the bot should start running.
