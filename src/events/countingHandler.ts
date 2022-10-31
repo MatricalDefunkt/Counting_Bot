@@ -2,7 +2,6 @@
 
 import { Event } from "../types/interfaces";
 import { CommandClient } from "../clientstart";
-import { Configs, Counts, MemberCounts } from "../database/database";
 import { EmbedBuilder } from "discord.js";
 
 export class CountingHandler implements Event {
@@ -60,9 +59,6 @@ export class CountingHandler implements Event {
             serverCount.lastMessageId = message.id;
             serverCount.lastCounterId = message.author.id;
             await serverCount.save();
-            ServerCounts.delete(guildId);
-            ServerCounts.set(guildId, serverCount);
-
             memberCount.count += 1;
             memberCount.lastCount = number;
             await memberCount.save();
