@@ -94,8 +94,8 @@ export default class Eval
     return {
       processedInteraction: interaction,
       code: isOwner
-        ? CommandCancelCodes.Success
-        : CommandCancelCodes.MissingPermissions,
+        ? CommandCancelCodes.SUCCESS
+        : CommandCancelCodes.MISSING_PERMISSIONS,
     };
   };
 

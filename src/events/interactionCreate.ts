@@ -25,7 +25,7 @@ export class InteractionCreate implements Event {
               const { processedInteraction, code } = await contextMenu.onBefore(
                 interaction
               );
-              if (code !== CommandCancelCodes.Success)
+              if (code !== CommandCancelCodes.SUCCESS)
                 return await contextMenu.onCancel(processedInteraction, code);
               else return await contextMenu.execute(processedInteraction);
             }
@@ -55,7 +55,7 @@ export class InteractionCreate implements Event {
               const { processedInteraction, code } = await command.onBefore(
                 interaction
               );
-              if (code === CommandCancelCodes.Success) {
+              if (code === CommandCancelCodes.SUCCESS) {
                 if (
                   !processedInteraction.replied ||
                   !processedInteraction.deferred
@@ -90,7 +90,7 @@ export class InteractionCreate implements Event {
               const { processedInteraction, code } = await command.onBefore(
                 interaction
               );
-              if (code === CommandCancelCodes.Success) {
+              if (code === CommandCancelCodes.SUCCESS) {
                 if (
                   !processedInteraction.replied ||
                   !processedInteraction.deferred

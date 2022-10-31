@@ -14,12 +14,6 @@ import {
 import { Model, ModelStatic } from "sequelize";
 import { CommandClient } from "../clientstart";
 
-export enum CommandCancelCodes {
-  MissingPermissions = 403,
-  ImproperConfiguration = 412,
-  Success = 200,
-}
-
 export interface BaseCommand<Cached extends CacheType = CacheType> {
   /**
    * The function to run if no condition is provided or the given condition is met.
@@ -221,6 +215,12 @@ export class PaginatorError extends Error {
     super(message);
     this.code = code;
   }
+}
+
+export enum CommandCancelCodes {
+  MISSING_PERMISSIONS = 403,
+  IMPROPER_CONFIG = 412,
+  SUCCESS = 200,
 }
 
 export enum ActionTypes {

@@ -42,14 +42,14 @@ export default class Count
       ServerConfigs.set(interaction.guildId, serverConfig);
       return {
         processedInteraction: interaction,
-        code: CommandCancelCodes.ImproperConfiguration,
+        code: CommandCancelCodes.IMPROPER_CONFIG,
       };
     } else {
       if (interaction.options.getSubcommand(true) === "set") {
         if (!serverConfig.countingChannelId) {
           return {
             processedInteraction: interaction,
-            code: CommandCancelCodes.ImproperConfiguration,
+            code: CommandCancelCodes.IMPROPER_CONFIG,
           };
         } else {
           return {
@@ -59,8 +59,8 @@ export default class Count
               ) ||
               (serverConfig.staffRoleId &&
                 interaction.member.roles.cache.has(serverConfig.staffRoleId))
-                ? CommandCancelCodes.Success
-                : CommandCancelCodes.MissingPermissions,
+                ? CommandCancelCodes.SUCCESS
+                : CommandCancelCodes.MISSING_PERMISSIONS,
             processedInteraction: interaction,
           };
         }
@@ -68,8 +68,8 @@ export default class Count
         return {
           processedInteraction: interaction,
           code: serverConfig.countingChannelId
-            ? CommandCancelCodes.Success
-            : CommandCancelCodes.ImproperConfiguration,
+            ? CommandCancelCodes.SUCCESS
+            : CommandCancelCodes.IMPROPER_CONFIG,
         };
       }
     }
@@ -79,12 +79,12 @@ export default class Count
     interaction,
     code
   ) => {
-    if (code === CommandCancelCodes.ImproperConfiguration) {
+    if (code === CommandCancelCodes.IMPROPER_CONFIG) {
       return await interaction.reply({
         content: `Please check the server's configuration using \`/config\`.`,
         ephemeral: true,
       });
-    } else if (code === CommandCancelCodes.MissingPermissions) {
+    } else if (code === CommandCancelCodes.MISSING_PERMISSIONS) {
       return await interaction.reply({
         content: `You are not authorized to run this command.`,
         ephemeral: true,

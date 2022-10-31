@@ -39,7 +39,7 @@ export default class Count
       ServerConfigs.set(interaction.guildId, serverConfig);
       return {
         processedInteraction: interaction,
-        code: CommandCancelCodes.ImproperConfiguration,
+        code: CommandCancelCodes.IMPROPER_CONFIG,
       };
     } else {
       if (
@@ -47,12 +47,12 @@ export default class Count
       )
         return {
           processedInteraction: interaction,
-          code: CommandCancelCodes.MissingPermissions,
+          code: CommandCancelCodes.MISSING_PERMISSIONS,
         };
       else
         return {
           processedInteraction: interaction,
-          code: CommandCancelCodes.Success,
+          code: CommandCancelCodes.SUCCESS,
         };
     }
   };
@@ -62,13 +62,13 @@ export default class Count
     code
   ) => {
     switch (code) {
-      case CommandCancelCodes.ImproperConfiguration:
+      case CommandCancelCodes.IMPROPER_CONFIG:
         await interaction.reply({
           content: `There was a problem finding the previous configuration. A new one has been created, please try again.`,
           ephemeral: true,
         });
         break;
-      case CommandCancelCodes.MissingPermissions:
+      case CommandCancelCodes.MISSING_PERMISSIONS:
         await interaction.reply({
           content: `You do not have the permission to use this command!`,
           ephemeral: true,
