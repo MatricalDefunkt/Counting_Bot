@@ -1,9 +1,16 @@
 /** @format */
 
-import { Model, ModelStatic, Op, QueryTypes } from "sequelize";
-import { MemberCounts } from "../database/database";
-import { PaginatorError, PaginatorErrorCodes } from "../types/interfaces";
+import { Model, ModelStatic } from "sequelize";
+import {
+  IPaginatorOptions,
+  PaginatorError,
+  PaginatorErrorCodes,
+} from "../types/interfaces";
 
+/**
+ * A class which assists in paginating a sequelize database.
+ * @param {IPaginatorOptions} paginatorOptions The options which allow pagination.
+ */
 export default class Paginator<ModelType extends Model> {
   private _pageIndex: number;
   public readonly pageSize: number;
@@ -29,6 +36,10 @@ export default class Paginator<ModelType extends Model> {
     this._whereQuery = newWhereQuery;
   }
 
+  /**
+   * Gets the results of the next page, and increments the page number.
+   * @returns {Promise<ModelType[]>} The next page of results.
+   */
   public async nextPage() {
     if (!this.initialized) {
       throw new PaginatorError(
@@ -46,7 +57,10 @@ export default class Paginator<ModelType extends Model> {
     this._pageIndex++;
     return await this._getPage();
   }
-
+  /**
+   * Gets the results of the previous page, and decrements the page number.
+   * @returns {Promise<ModelType[]>} The preivous page of results.
+   */
   public async previousPage() {
     if (!this.initialized) {
       throw new PaginatorError(
@@ -65,6 +79,11 @@ export default class Paginator<ModelType extends Model> {
     return await this._getPage();
   }
 
+  /**
+   * Gets the page of the specified index.
+   * @param pageIndex The page index to set the paginator to.
+   * @returns {Promise<ModelType[]>} The page of results.
+   */
   public async goToPage(pageIndex: number) {
     if (!this.initialized) {
       throw new PaginatorError(
@@ -83,6 +102,10 @@ export default class Paginator<ModelType extends Model> {
     return await this._getPage();
   }
 
+  /**
+   * Gets the first page of results, setting the page index to 0.
+   * @returns {Promise<ModelType[]>} The first page of results.
+   */
   public async firstPage() {
     if (!this.initialized) {
       throw new PaginatorError(
@@ -95,6 +118,10 @@ export default class Paginator<ModelType extends Model> {
     return await this._getPage();
   }
 
+  /**
+   * Gets the last page of results, setting the page index to the last page.
+   * @returns {Promise<ModelType[]>} The first page of results.
+   */
   public async lastPage() {
     if (!this.initialized) {
       throw new PaginatorError(
@@ -107,6 +134,11 @@ export default class Paginator<ModelType extends Model> {
     return await this._getPage();
   }
 
+  /**
+   * Gets the page of results at the current page index.
+   * @returns {Promise<ModelType[]>} The page of results.
+   * @private
+   */
   private async _getPage() {
     if (!this.initialized) {
       throw new PaginatorError(
@@ -115,32 +147,29 @@ export default class Paginator<ModelType extends Model> {
       );
     }
 
-    const result = await this.model.findAndCountAll({
+    const result = await this.model.findAll({
       where: this._whereQuery,
       limit: this.pageSize,
       offset: this._pageIndex * this.pageSize,
       order: this._orderQuery,
     });
-    this._maxPages = Math.ceil(result.count / this.pageSize);
-    return result.rows;
+    return result;
   }
 
+  /**
+   * Initializes the paginator, and gets the first page of results.
+   * @returns {Promise<ModelType[]>} The first page of results.
+   */
   public async init() {
     const result = await this.model.count({
       where: this._whereQuery,
     });
     this._maxPages = Math.ceil(result / this.pageSize);
     this.initialized = true;
-    return this.firstPage();
+    return await this.firstPage();
   }
 
-  constructor(paginatorOptions: {
-    pageSize: number;
-    model: ModelStatic<ModelType>;
-    pageIndex?: number;
-    whereQuery?: {};
-    orderQuery?: [string, "ASC" | "DESC"][];
-  }) {
+  constructor(paginatorOptions: IPaginatorOptions<ModelType>) {
     this._pageIndex = paginatorOptions.pageIndex ?? 0;
     this.pageSize = paginatorOptions.pageSize;
     this.model = paginatorOptions.model;
