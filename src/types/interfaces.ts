@@ -11,6 +11,7 @@ import {
   ChatInputCommandInteraction,
   ContextMenuCommandInteraction,
 } from "discord.js";
+import { Model, ModelStatic } from "sequelize";
 import { CommandClient } from "../clientstart";
 
 export enum CommandCancelCodes {
@@ -189,6 +190,29 @@ export interface Event {
    * @param client The client to add listeners for.
    */
   handler: (client: CommandClient<true>) => any;
+}
+
+export interface IPaginatorOptions<ModelType extends Model> {
+  /**
+   * Number of results per page
+   */
+  pageSize: number;
+  /**
+   * The model to paginate
+   */
+  model: ModelStatic<ModelType>;
+  /**
+   * The starting page number
+   */
+  pageIndex?: number;
+  /**
+   * The "where" query to use for getting rows
+   */
+  whereQuery?: {};
+  /**
+   * The "order" query to use for getting rows
+   */
+  orderQuery?: [string, "ASC" | "DESC"][];
 }
 
 export class PaginatorError extends Error {
