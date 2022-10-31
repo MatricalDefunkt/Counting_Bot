@@ -203,23 +203,20 @@ export default class Leaderboard
             modalSubmit.fields.getTextInputValue("goToValue")
           );
           if (pageNumber === NaN) {
-            await modalSubmit.followUp({
+            await modalSubmit.editReply({
               content: "That is not a valid page number!",
-              ephemeral: true,
             });
             return;
           }
           if (pageNumber > paginator.maxPages) {
-            await modalSubmit.followUp({
+            await modalSubmit.editReply({
               content: "That page number is too high!",
-              ephemeral: true,
             });
             return;
           }
           if (pageNumber < 1) {
-            await modalSubmit.followUp({
+            await modalSubmit.editReply({
               content: "That page number is too low!",
-              ephemeral: true,
             });
             return;
           }
