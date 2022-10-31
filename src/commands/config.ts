@@ -42,7 +42,9 @@ export default class Count
         code: CommandCancelCodes.ImproperConfiguration,
       };
     } else {
-      if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild))
+      if (
+        !interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)
+      )
         return {
           processedInteraction: interaction,
           code: CommandCancelCodes.MissingPermissions,
