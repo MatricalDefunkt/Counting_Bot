@@ -3,9 +3,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { PermissionFlagsBits } from "discord.js";
 import { Configs } from "../database/database";
-import { SubCommandParent, CommandCancelCodes } from "../types/interfaces";
+import {
+  SubCommandParent,
+  CommandCancelCodes,
+  CommandTypes,
+} from "../types/interfaces";
 import subCommands from "./count/exports";
-import CountServer from "./count/server";
 
 export default class Count
   extends SlashCommandBuilder
@@ -14,6 +17,7 @@ export default class Count
   name = "count";
   description = "Perform actions with the server's current count!";
   children: SubCommandParent<"cached">["children"] = subCommands;
+  type: SubCommandParent["type"] = CommandTypes.SUB_COMMAND_PARENT;
 
   execute: SubCommandParent<"cached">["execute"] = async (interaction) => {
     const subCommand = this.children.find(

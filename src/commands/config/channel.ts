@@ -10,6 +10,7 @@ import {
 import { getKeyFromValue } from "../../utils/getKeyFromValue";
 import {
   ActionTypes,
+  CommandTypes,
   ConfigChannelTypes,
   SubCommand,
 } from "../../types/interfaces";
@@ -24,6 +25,7 @@ export default class ConfigChannel
 {
   name = "channel";
   description = "Modify the channel for counting.";
+  type: SubCommand<"cached">["type"] = CommandTypes.SUB_COMMAND;
 
   execute: SubCommand<"cached">["execute"] = async (interaction) => {
     const action = interaction.options.getNumber("action", true) as ActionTypes;

@@ -1,7 +1,7 @@
 /** @format */
 
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { ChatInputCommand } from "../types/interfaces";
+import { ChatInputCommand, CommandTypes } from "../types/interfaces";
 
 export default class Ping
   extends SlashCommandBuilder
@@ -9,6 +9,8 @@ export default class Ping
 {
   name = "ping";
   description = "Checks the ping of the bot";
+  type: ChatInputCommand["type"] = CommandTypes.CHAT_INPUT;
+
   execute: ChatInputCommand["execute"] = async (interaction) => {
     const reply = await interaction.editReply({
       content: "Running...",

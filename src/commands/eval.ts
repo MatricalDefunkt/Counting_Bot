@@ -8,7 +8,11 @@ import {
   TextInputStyle,
 } from "discord.js";
 import { Logger } from "../utils/botlog";
-import { ChatInputCommand, CommandCancelCodes } from "../types/interfaces";
+import {
+  ChatInputCommand,
+  CommandCancelCodes,
+  CommandTypes,
+} from "../types/interfaces";
 
 const trueFalseArrays = {
   trueArray: ["true", "yes", "y", "t"],
@@ -47,6 +51,8 @@ export default class Eval
 {
   name = "eval";
   description = "BOT-OWNER ONLY COMMAND.";
+  type: ChatInputCommand["type"] = CommandTypes.CHAT_INPUT;
+
   execute: ChatInputCommand["execute"] = async (interaction) => {
     await interaction.showModal(evalModal);
     const modalSubmitInteraction = await interaction

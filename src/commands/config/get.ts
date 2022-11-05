@@ -1,7 +1,7 @@
 /** @format */
 
 import { EmbedBuilder, SlashCommandSubcommandBuilder } from "discord.js";
-import { SubCommand } from "../../types/interfaces";
+import { CommandTypes, SubCommand } from "../../types/interfaces";
 
 export default class ConfigGet
   extends SlashCommandSubcommandBuilder
@@ -9,6 +9,7 @@ export default class ConfigGet
 {
   name = "get";
   description = "Gets the server's combined configurations.";
+  type: SubCommand<"cached">["type"] = CommandTypes.SUB_COMMAND;
 
   execute: SubCommand<"cached">["execute"] = async (interaction) => {
     const embed = new EmbedBuilder();

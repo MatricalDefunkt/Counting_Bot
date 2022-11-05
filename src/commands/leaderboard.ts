@@ -16,7 +16,7 @@ import {
 } from "../utils/buttonCreators";
 import { createLeaderboardEmbed } from "../utils/embedCreators";
 import { MemberCounts } from "../database/database";
-import { ChatInputCommand } from "../types/interfaces";
+import { ChatInputCommand, CommandTypes } from "../types/interfaces";
 import Paginator from "../utils/paginator";
 import { TextInputBuilder } from "@discordjs/builders";
 import { Op } from "sequelize";
@@ -27,6 +27,8 @@ export default class Leaderboard
 {
   name = "leaderboard";
   description = "Gets the counting leaderboard for the server.";
+  type: ChatInputCommand["type"] = CommandTypes.CHAT_INPUT;
+
   execute: ChatInputCommand<"cached">["execute"] = async (interaction) => {
     const paginator = new Paginator({
       model: MemberCounts,

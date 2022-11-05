@@ -3,7 +3,7 @@
 import { PermissionFlagsBits, SlashCommandSubcommandBuilder } from "discord.js";
 import { CountEmbedTypes, createCountEmbed } from "../../utils/embedCreators";
 import { Configs, Counts } from "../../database/database";
-import { SubCommand } from "../../types/interfaces";
+import { CommandTypes, SubCommand } from "../../types/interfaces";
 
 export default class CountMember
   extends SlashCommandSubcommandBuilder
@@ -12,6 +12,7 @@ export default class CountMember
   name = "member";
   description =
     "Get the number of times you or the provided member have counted.";
+  type: SubCommand<"cached">["type"] = CommandTypes.SUB_COMMAND;
 
   execute: SubCommand<"cached">["execute"] = async (interaction) => {
     const providedMember = interaction.options.getMember("member");
@@ -53,9 +54,7 @@ export default class CountMember
   };
 
   isAutocompleteSubCommand: SubCommand<"cached">["isAutocompleteSubCommand"] =
-    () => {
-      return false;
-    };
+    () => false;
   constructor() {
     super();
     this.setName(this.name);

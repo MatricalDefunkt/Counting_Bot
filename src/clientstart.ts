@@ -9,7 +9,7 @@ import {
   Collection,
   IntentsBitField,
 } from "discord.js";
-import { ChatInputCommand, ContextMenu } from "./types/interfaces";
+import { BaseCommand, ContextMenu } from "./types/interfaces";
 import { registerCommands } from "./utils/registerCommands";
 import commands from "./commands/exports";
 import contextMenus from "./contextmenus/exports";
@@ -26,14 +26,14 @@ import { inspect } from "util";
 const registerCommandsBool = process.argv[2];
 
 export class CommandClient<Ready extends boolean> extends Client<Ready> {
-  declare commands: Collection<string, ChatInputCommand>;
+  declare commands: Collection<string, BaseCommand>;
   declare contextMenus: Collection<string, ContextMenu>;
   declare serverConfigs: Collection<string, Configs>;
 }
 
 export interface CommandClientInterface<Ready extends boolean>
   extends Client<Ready> {
-  commands: Collection<string, ChatInputCommand>;
+  commands: Collection<string, BaseCommand>;
   contextMenus: Collection<string, ContextMenu>;
 }
 

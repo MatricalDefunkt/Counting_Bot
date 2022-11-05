@@ -6,7 +6,7 @@ import {
   SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { Configs, Counts } from "../../database/database";
-import { SubCommand } from "../../types/interfaces";
+import { CommandTypes, SubCommand } from "../../types/interfaces";
 import {
   createConfirmationButtons,
   disableButtons,
@@ -18,6 +18,7 @@ export default class CountSet
 {
   name = "set";
   description = "Set the server's current count.";
+  type: SubCommand<"cached">["type"] = CommandTypes.SUB_COMMAND;
 
   execute: SubCommand<"cached">["execute"] = async (interaction) => {
     let serverConfig = ServerConfigs.get(

@@ -4,6 +4,7 @@ import { ComponentType, SlashCommandSubcommandBuilder } from "discord.js";
 import { getKeyFromValue } from "../../utils/getKeyFromValue";
 import {
   ActionTypes,
+  CommandTypes,
   ConfigRoleTypes,
   SubCommand,
 } from "../../types/interfaces";
@@ -18,6 +19,7 @@ export default class ConfigRole
 {
   name = "role";
   description = "Modify the staff role used to configure the bot.";
+  type: SubCommand<"cached">["type"] = CommandTypes.SUB_COMMAND;
 
   execute: SubCommand<"cached">["execute"] = async (interaction) => {
     const action = interaction.options.getNumber("action", true) as ActionTypes;

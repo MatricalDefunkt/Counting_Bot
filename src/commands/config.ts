@@ -2,7 +2,11 @@
 
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { PermissionFlagsBits } from "discord.js";
-import { SubCommandParent, CommandCancelCodes } from "../types/interfaces";
+import {
+  SubCommandParent,
+  CommandCancelCodes,
+  CommandTypes,
+} from "../types/interfaces";
 import subCommands from "./config/exports";
 
 export default class Count
@@ -12,6 +16,7 @@ export default class Count
   name = "config";
   description = "Configure this bot for this server.";
   children: SubCommandParent<"cached">["children"] = subCommands;
+  type: SubCommandParent["type"] = CommandTypes.SUB_COMMAND_PARENT;
 
   execute: SubCommandParent<"cached">["execute"] = async (interaction) => {
     const subCommand = this.children.find(

@@ -1,6 +1,6 @@
 /** @format */
 
-import { ChatInputCommand } from "../types/interfaces";
+import { ChatInputCommand, CommandTypes } from "../types/interfaces";
 import {
   SlashCommandBuilder,
   InteractionCollector,
@@ -16,6 +16,7 @@ export default class Help
 {
   name = "help";
   description = "Get help with the bot!";
+  type: ChatInputCommand["type"] = CommandTypes.CHAT_INPUT;
 
   execute: ChatInputCommand["execute"] = async (interaction) => {
     const row = new ActionRowBuilder<SelectMenuBuilder>();

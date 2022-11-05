@@ -3,7 +3,7 @@
 import { PermissionFlagsBits, SlashCommandSubcommandBuilder } from "discord.js";
 import { CountEmbedTypes, createCountEmbed } from "../../utils/embedCreators";
 import { Configs, Counts } from "../../database/database";
-import { SubCommand } from "../../types/interfaces";
+import { CommandTypes, SubCommand } from "../../types/interfaces";
 
 export default class CountServer
   extends SlashCommandSubcommandBuilder
@@ -11,6 +11,7 @@ export default class CountServer
 {
   name = "server";
   description = "Gets the server's current number count.";
+  type: SubCommand<"cached">["type"] = CommandTypes.SUB_COMMAND;
 
   execute: SubCommand<"cached">["execute"] = async (interaction) => {
     let serverConfig = ServerConfigs.get(

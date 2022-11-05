@@ -14,7 +14,8 @@ import {
 import { Model, ModelStatic } from "sequelize";
 import { CommandClient } from "../clientstart";
 
-export interface BaseCommand<Cached extends CacheType = CacheType> {
+export interface BaseCommand<Cached extends CacheType = CacheType>
+  extends SlashCommandBuilder {
   /**
    * The function to run if no condition is provided or the given condition is met.
    * @param interaction The application command which was recieved.
@@ -38,16 +39,6 @@ export interface BaseCommand<Cached extends CacheType = CacheType> {
     code: CommandCancelCodes
   ) => Promise<any> | void;
   /**
-   * Whether the command is reserverd for the beta bot only.
-   * @default false
-   */
-  betaOnly?: boolean;
-}
-
-export interface ChatInputCommand<Cached extends CacheType = CacheType>
-  extends SlashCommandBuilder,
-    BaseCommand<Cached> {
-  /**
    * Checks if the command is a guild command and can make use of cached values.
    */
   isGuildCommand: () => this is ChatInputCommand<"cached">;
@@ -64,28 +55,40 @@ export interface ChatInputCommand<Cached extends CacheType = CacheType>
    */
   isSubCommandParent: () => this is SubCommandParent<Cached>;
   /**
-   * Whether this context menu is to be registered globally, or just with the test guild.
-   * @default true
-   */
-  global?: boolean;
-  /**
    * Whether this command is supposed to be deferred or not.
    * @default true
    */
-  canBeDeferred?: boolean;
+  readonly canBeDeferred?: boolean;
+  /**
+   * Whether the command is reserverd for the beta bot only.
+   * @default false
+   */
+  readonly betaOnly?: boolean;
+  /**
+   * Discrimates the command type
+   * @readonly
+   */
+  readonly type: CommandTypes;
 }
 
-export interface AutocompleteCommand<Cached extends CacheType = CacheType>
-  extends ChatInputCommand<Cached> {
+export interface ChatInputCommand<Cached extends CacheType = CacheType>
+  extends SlashCommandBuilder,
+    BaseCommand<Cached> {
+  readonly type: CommandTypes.CHAT_INPUT;
+}
+
+export interface AutocompleteCommand<Cached extends CacheType = CacheType> {
   /**
    * Respond to autocomplete interactions.
    * @param interaction The autocomplete interaction which was recieved.
    */
   respond: (interaction: AutocompleteInteraction<Cached>) => Promise<any>;
+
+  readonly type: CommandTypes.AUTOCOMPLETE;
 }
 
 export interface SubCommandParent<Cached extends CacheType = CacheType>
-  extends ChatInputCommand<Cached> {
+  extends BaseCommand<Cached> {
   /**
    * The subcommands of this subcommand parent.
    */
@@ -99,40 +102,87 @@ export interface SubCommandParent<Cached extends CacheType = CacheType>
    * Checks if this SubCommandParent has an AutoCompleteSubCommand as one of its `children`
    */
   isAutocompleteParent: () => this is AutocompleteParent;
+  readonly type: CommandTypes.SUB_COMMAND_PARENT;
 }
 
 export interface AutocompleteParent<Cached extends CacheType = CacheType>
-  extends SubCommandParent<Cached> {
-  respond: (interaction: AutocompleteInteraction<Cached>) => Promise<any>;
-}
-
-export interface SubCommand<Cached extends CacheType = CacheType>
-  extends SlashCommandSubcommandBuilder,
-    Omit<
-      BaseCommand<Cached>,
-      | "isGuildCommand"
-      | "isDMCommand"
-      | "isSubCommandParent"
-      | "isAutocompleteCommand"
-    > {
+  extends BaseCommand<Cached> {
   /**
-   * Whether this command is supposed to be deferred or not.
-   * @default true
+   * The subcommands of this subcommand parent.
    */
-  canBeDeferred?: boolean;
+  readonly children: (
+    | SubCommand<"cached">
+    | SubCommand
+    | AutocompleteSubCommand
+    | AutocompleteSubCommand<"cached">
+  )[];
   /**
-   * Checks if the subcommand is an AutocompleteSubCommand and must respond to autocomplete interactions.
+   * Checks if this SubCommandParent has an AutoCompleteSubCommand as one of its `children`
    */
-  isAutocompleteSubCommand: () => this is AutocompleteSubCommand<Cached>;
-}
-
-export interface AutocompleteSubCommand<Cached extends CacheType = CacheType>
-  extends SubCommand<Cached> {
+  isAutocompleteParent: () => this is AutocompleteParent;
   /**
    * Respond to autocomplete interactions.
    * @param interaction The autocomplete interaction which was recieved.
    */
   respond: (interaction: AutocompleteInteraction<Cached>) => Promise<any>;
+  readonly type: CommandTypes.AUTOCOMPLETE_PARENT;
+}
+
+export interface SubCommand<Cached extends CacheType = CacheType>
+  extends SlashCommandSubcommandBuilder {
+  /**
+   * The function to run if no condition is provided or the given condition is met.
+   * @param interaction The application command which was recieved.
+   */
+  execute: (interaction: ChatInputCommandInteraction<Cached>) => Promise<any>;
+  /**
+   * Condition to check for before running command.
+   * @param interaction The application command which was recieved.
+   * @returns Whether the condition was fulfilled, and the processed interaction.
+   */
+  onBefore?: (interaction: ChatInputCommandInteraction<Cached>) => Promise<{
+    processedInteraction: ChatInputCommandInteraction<Cached>;
+    code: CommandCancelCodes;
+  }>;
+  /**
+   * Function to run if condition fails.
+   * @param interaction The application command which was recieved.
+   */
+  onCancel?: (
+    interaction: ChatInputCommandInteraction<Cached>,
+    code: CommandCancelCodes
+  ) => Promise<any> | void;
+  /**
+   * Checks if the subcommand is an AutocompleteSubCommand and must respond to autocomplete interactions.
+   */
+  isAutocompleteSubCommand: () => this is AutocompleteSubCommand<Cached>;
+  /**
+   * Whether this command is supposed to be deferred or not.
+   * @default true
+   */
+  readonly canBeDeferred?: boolean;
+  /**
+   * Whether the command is reserverd for the beta bot only.
+   * @default false
+   */
+  readonly betaOnly?: boolean;
+
+  readonly type: CommandTypes.SUB_COMMAND;
+}
+
+export interface AutocompleteSubCommand<Cached extends CacheType = CacheType>
+  extends SlashCommandSubcommandBuilder,
+    SubCommand<Cached> {
+  /**
+   * Checks if the subcommand is an AutocompleteSubCommand and must respond to autocomplete interactions.
+   */
+  isAutocompleteSubCommand: () => this is AutocompleteSubCommand<Cached>;
+  /**
+   * Respond to autocomplete interactions.
+   * @param interaction The autocomplete interaction which was recieved.
+   */
+  respond: (interaction: AutocompleteInteraction<Cached>) => Promise<any>;
+  readonly type: CommandTypes.SUB_COMMAND;
 }
 
 export interface ContextMenu extends ContextMenuCommandBuilder {
@@ -159,19 +209,15 @@ export interface ContextMenu extends ContextMenuCommandBuilder {
     code: CommandCancelCodes
   ) => Promise<any> | void;
   /**
-   * Whether this context menu is to be registered globally, or just with the test guild.
-   */
-  global?: boolean;
-  /**
    * Whether this command is supposed to be deferred or not.
    * @default true
    */
-  canBeDeferred?: boolean;
+  readonly canBeDeferred?: boolean;
   /**
    * Whether the command is reserverd for the beta bot only.
    * @default false
    */
-  betaOnly?: boolean;
+  readonly betaOnly?: boolean;
 }
 
 export interface Event {
@@ -247,4 +293,15 @@ export enum PaginatorErrorCodes {
   MIN_PAGE,
   INVALID_PAGE,
   NOT_INITIALIZED,
+}
+
+export enum CommandTypes {
+  BASE = "BASE",
+  CHAT_INPUT = "CHAT_INPUT",
+  AUTOCOMPLETE = "AUTOCOMPLETE",
+  SUB_COMMAND = "SUB_COMMAND",
+  AUTOCOMPLETE_SUB_COMMAND = "AUTOCOMPLETE_SUB_COMMAND",
+  SUB_COMMAND_PARENT = "SUB_COMMAND_PARENT",
+  AUTOCOMPLETE_PARENT = "AUTOCOMPLETE_PARENT",
+  CONTEXT_MENU = "CONTEXT_MENU",
 }
