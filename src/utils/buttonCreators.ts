@@ -199,22 +199,18 @@ export const createPaginationButtons = (
       new ButtonBuilder()
         .setCustomId(customIdFirst)
         .setEmoji("⏮")
-        .setLabel("First")
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId(customIdPrevious)
         .setEmoji("◀")
-        .setLabel("Previous")
         .setStyle(ButtonStyle.Primary),
       new ButtonBuilder()
         .setCustomId(customIdNext)
         .setEmoji("▶")
-        .setLabel("Next")
         .setStyle(ButtonStyle.Primary),
       new ButtonBuilder()
         .setCustomId(customIdLast)
         .setEmoji("⏭")
-        .setLabel("Last")
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId(customIdGoTo)
