@@ -8,8 +8,9 @@ export class MessageCreate implements Event {
   name = "messageCreate";
   handler: Event["handler"] = async (client: CommandClient<true>) => {
     client.on("messageCreate", async (message) => {
-      if (!(message.content && message.content === `<@${BotClient.user.id}>`))
-        return;
+      const hasBotMention =
+        message.mentions.parsedUsers.first()?.id === client.user?.id;
+      if (!(message.content && hasBotMention)) return;
 
       if (message.inGuild()) {
         if (
